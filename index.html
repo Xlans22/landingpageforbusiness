@@ -23,9 +23,23 @@
 </head>
 <body>
   <!-- ═══════════════════════════════════════════════════════════════
-       UNIVERSAL GRADUAL BACKGROUND BLUR BACKDROP
+       UNIVERSAL GRADUAL BACKGROUND BLUR BACKDROP & GLOBAL SPEC MODAL
   ═══════════════════════════════════════════════════════════════ -->
-  <div id="card-expand-backdrop" class="card-expand-backdrop" aria-hidden="true"></div>
+  <div id="focus-backdrop" aria-hidden="true"></div>
+  <div id="global-spec-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="spec-modal-inner">
+      <div class="spec-modal-topbar">
+        <div class="spec-modal-badges"></div>
+        <button type="button" id="spec-modal-close-btn" class="spec-modal-close" aria-label="Close modal">
+          <span class="close-label">Close</span> <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="spec-modal-media"></div>
+      <h3 class="spec-modal-title"></h3>
+      <p class="spec-modal-lead"></p>
+      <div class="spec-modal-body"></div>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
        SCROLL PROGRESS INDICATOR (Fixed Top Bar)
@@ -35,9 +49,9 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       INTRO SCROLL SPACER (450vh invisible scroll driver)
+       INTRO SCROLL SPACER (250vh invisible scroll driver)
   ═══════════════════════════════════════════════════════════════ -->
-  <div id="intro-scroll-spacer" class="intro-runway" style="height: 450vh; width: 100%; pointer-events: none;" aria-hidden="true"></div>
+  <div id="intro-scroll-spacer" class="intro-runway" style="height: 250vh; width: 100%; pointer-events: none;" aria-hidden="true"></div>
 
   <!-- ═══════════════════════════════════════════════════════════════
        UNIFIED INTRO-TO-FLOATING-PILL NAVBAR (Single Continuous Element)
@@ -107,8 +121,6 @@
     <div class="container hero-grid">
       <!-- Left Column -->
       <div class="hero-left">
-        <div class="pill-badge" data-i18n="hero_badge">ENTERPRISE SYSTEMS & HITL ORCHESTRATION</div>
-        <div class="hero-rnd-badge mono" data-i18n="hero_rnd_badge">[ IN-HOUSE R&D LAB // PROPRIETARY HARDWARE & SOFTWARE PRODUCTS ]</div>
         <h1 class="hero-headline">
           <span class="hero-headline-p1" data-i18n="hero_headline_p1">We Engineer & Build</span>
           <span class="hero-headline-p2" data-i18n="hero_headline_p2">Everything Your Operations Demand.</span>
@@ -129,7 +141,6 @@
               </button>
             </div>
             <div class="spec-drawer-scroll">
-              <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
               <div class="spec-drawer-inner">
                 <div class="spec-content-block">
                   <div class="spec-block-title">
@@ -159,7 +170,6 @@
                   </div>
                   <p class="spec-block-desc" data-i18n="hero_adv4_desc">Local UAE accountability, full IP ownership, and deterministic human-in-the-loop safety gates.</p>
                 </div>
-                <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
               </div>
             </div>
           </div>
@@ -314,7 +324,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -344,7 +353,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="cap_c1_why">Unlike software-only agencies, we bridge physical hardware sensors, C/C++/Rust firmware, and cloud command centers into one unified system.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -376,7 +384,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -399,7 +406,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="cap_c2_why">Sub-15ms API latency, 100% schema-validated data contracts, and full bilingual (EN/AR) web and mobile delivery.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -436,7 +442,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -466,7 +471,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="cap_c3_why">Compliant UAE data handling, strict quality-assurance benchmarks, and ready-to-ingest API delivery.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -517,7 +521,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -540,7 +543,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="cap_c4_why">Sovereign UAE cloud / on-premise deployment options with 100% cryptographic auditability.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -617,7 +619,6 @@
           </div>
 
           <div class="spec-drawer-scroll">
-            <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
             <div class="spec-drawer-inner">
               <div class="spec-content-block">
                 <div class="spec-block-title">
@@ -640,7 +641,6 @@
                 </div>
                 <p class="spec-block-desc" data-i18n="dv_spec_why">Combines deep neural document classification with zero-privilege database isolation, built for sovereign UAE regulatory compliance.</p>
               </div>
-              <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
             </div>
           </div>
         </div>
@@ -686,7 +686,6 @@
           </div>
 
           <div class="spec-drawer-scroll">
-            <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
             <div class="spec-drawer-inner">
               <div class="spec-content-block">
                 <div class="spec-block-title">
@@ -709,7 +708,6 @@
                 </div>
                 <p class="spec-block-desc" data-i18n="ss_spec_why">Guaranteed zero-hallucination grounding with cryptographic audit logging and strict UAE data sovereignty.</p>
               </div>
-              <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
             </div>
           </div>
         </div>
@@ -775,7 +773,6 @@
                 </div>
 
                 <div class="spec-drawer-scroll">
-                  <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                   <div class="spec-drawer-inner">
                     <div class="spec-content-block">
                       <div class="spec-block-title">
@@ -805,7 +802,6 @@
                       </div>
                       <p class="spec-block-desc" data-i18n="proj1_spec4_desc">Encrypted 5G telemetry streaming live violation packets to central command.</p>
                     </div>
-                    <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                   </div>
                 </div>
               </div>
@@ -856,7 +852,6 @@
                 </div>
 
                 <div class="spec-drawer-scroll">
-                  <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                   <div class="spec-drawer-inner">
                     <div class="spec-content-block">
                       <div class="spec-block-title">
@@ -886,7 +881,6 @@
                       </div>
                       <p class="spec-block-desc" data-i18n="proj2_spec4_desc">Live web/mobile fleet command center tracking routes, overspeed alerts, and predictive maintenance.</p>
                     </div>
-                    <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                   </div>
                 </div>
               </div>
@@ -933,7 +927,6 @@
                 </div>
 
                 <div class="spec-drawer-scroll">
-                  <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                   <div class="spec-drawer-inner">
                     <div class="spec-content-block">
                       <div class="spec-block-title">
@@ -963,7 +956,6 @@
                       </div>
                       <p class="spec-block-desc" data-i18n="proj3_spec4_desc">Supervised AI detecting micro-fractures and thermal leaks.</p>
                     </div>
-                    <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                   </div>
                 </div>
               </div>
@@ -1015,7 +1007,6 @@
                 </div>
 
                 <div class="spec-drawer-scroll">
-                  <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                   <div class="spec-drawer-inner">
                     <div class="spec-content-block">
                       <div class="spec-block-title">
@@ -1045,7 +1036,6 @@
                       </div>
                       <p class="spec-block-desc" data-i18n="proj4_spec4_desc">Automated OCR and context-isolated RAG search.</p>
                     </div>
-                    <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                   </div>
                 </div>
               </div>
@@ -1120,7 +1110,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1143,7 +1132,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="bp1_spec_why">Combines heavy enterprise ERP stability with real-time automotive IoT ingest and local Abu Dhabi implementation.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
 
@@ -1192,7 +1180,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1215,7 +1202,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="bp2_spec_why">Ruggedized UAE heat tolerance (up to 55°C ambient), local hardware calibration, and zero-loss edge caching during network dropouts.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
 
@@ -1264,7 +1250,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1287,7 +1272,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="bp3_spec_why">Compliant with UAE Federal Law No. 45 on Personal Data Protection with full cryptographic provenance logs.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
 
@@ -1335,7 +1319,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1358,7 +1341,6 @@
                     </div>
                     <p class="spec-block-desc" data-i18n="bp4_spec_why">Single shared codebase architecture powering web, iOS, and Android executive clients simultaneously.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
 
@@ -1506,7 +1488,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1515,7 +1496,6 @@
                     </div>
                     <p class="spec-block-desc">Zero cross-border egress by locking data residency to AWS UAE data centers with multi-AZ replication.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -1545,7 +1525,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1554,7 +1533,6 @@
                     </div>
                     <p class="spec-block-desc">Seamless enterprise single sign-on (SSO), conditional access policies, and audited RBAC authorization.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -1589,7 +1567,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1598,7 +1575,6 @@
                     </div>
                     <p class="spec-block-desc">Zero training data retention terms, private endpoints, and deterministic schema outputs for production workflows.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -1628,7 +1604,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1637,7 +1612,6 @@
                     </div>
                     <p class="spec-block-desc">Sub-10ms ANPR and optical speed classification on embedded edge units alongside accelerated cluster RAG inference.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -1669,7 +1643,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1678,7 +1651,6 @@
                     </div>
                     <p class="spec-block-desc">ACID transaction guarantees for enterprise ERP synchronization combined with high-dimensional vector search.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -1709,7 +1681,6 @@
               </div>
 
               <div class="spec-drawer-scroll">
-                <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
                 <div class="spec-drawer-inner">
                   <div class="spec-content-block">
                     <div class="spec-block-title">
@@ -1718,7 +1689,6 @@
                     </div>
                     <p class="spec-block-desc">Global edge DDoS mitigation, TLS termination, and containerized deployment reproducibility.</p>
                   </div>
-                  <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
                 </div>
               </div>
             </div>
@@ -1773,7 +1743,6 @@
             </div>
 
             <div class="spec-drawer-scroll">
-              <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
               <div class="spec-drawer-inner">
                 <div class="spec-content-block">
                   <div class="spec-block-title">
@@ -1782,7 +1751,6 @@
                   </div>
                   <p class="spec-block-desc">AI agents cannot issue INSERT, UPDATE, DELETE, or hardware actuator commands without explicit operator authorization.</p>
                 </div>
-                <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
               </div>
             </div>
           </div>
@@ -1811,7 +1779,6 @@
             </div>
 
             <div class="spec-drawer-scroll">
-              <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
               <div class="spec-drawer-inner">
                 <div class="spec-content-block">
                   <div class="spec-block-title">
@@ -1820,7 +1787,6 @@
                   </div>
                   <p class="spec-block-desc">Every operator approval is timestamped and cryptographically signed with biometric or FIDO2 hardware verification.</p>
                 </div>
-                <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
               </div>
             </div>
           </div>
@@ -1851,7 +1817,6 @@
             </div>
 
             <div class="spec-drawer-scroll">
-              <button type="button" class="spec-close-pill spec-close-top" data-i18n="card_close">Close ×</button>
               <div class="spec-drawer-inner">
                 <div class="spec-content-block">
                   <div class="spec-block-title">
@@ -1860,7 +1825,6 @@
                   </div>
                   <p class="spec-block-desc">Zero runtime exceptions from malformed inputs. Protobuf, Pydantic, and TypeScript schemas enforce rigid contract boundaries.</p>
                 </div>
-                <button type="button" class="spec-close-pill spec-close-bottom" data-i18n="card_close">Close ×</button>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    FLAMINGO EMERGING TECHNOLOGIES — Application Logic
    GSAP + ScrollTrigger + Lenis + Floating Pill Nav + Tech Showcase + Search + i18n
    ═══════════════════════════════════════════════════════════════ */
@@ -22,7 +22,6 @@ const translations = {
 
     // Hero & Telemetry
     hero_badge: "ENTERPRISE SYSTEMS & HITL ORCHESTRATION",
-    hero_rnd_badge: "[ IN-HOUSE R&D LAB // PROPRIETARY HARDWARE & SOFTWARE PRODUCTS ]",
     hero_headline: "We Engineer & Build Everything Your Operations Demand.",
     hero_headline_p1: "We Engineer & Build",
     hero_headline_p2: "Everything Your Operations Demand.",
@@ -342,7 +341,6 @@ const translations = {
 
     // Hero & Telemetry
     hero_badge: "أنظمة المؤسسات وتنسيق العمليات الإشرافية",
-    hero_rnd_badge: "[ مختبر البحث والتطوير // منتجاتنا الخاصة من الأجهزة والبرمجيات ]",
     hero_headline: "نبني ونبتكر كل ما تتطلبه عملياتكم التقنية",
     hero_headline_p1: "نبني ونبتكر",
     hero_headline_p2: "كل ما تتطلبه عملياتكم التقنية",
@@ -1167,11 +1165,8 @@ function initIntroAnimation() {
 
   if (navControlsWrapper) {
     gsap.set(navControlsWrapper, {
-      width: 0,
-      flexGrow: 0,
       opacity: 0,
-      marginLeft: 0,
-      marginRight: 0,
+      y: 6,
       pointerEvents: 'none'
     });
   }
@@ -1187,17 +1182,22 @@ function initIntroAnimation() {
     gsap.set(scrollIndicator, { opacity: 1, y: 0 });
   }
 
-  // Master timeline driven by #intro-scroll-spacer (height: 450vh, scrub: 2.8, no pinning on navbar)
+  // Master timeline driven by #intro-scroll-spacer (height: 250vh, scrub: 0.5, no pinning on navbar)
   const introTL = gsap.timeline({
     scrollTrigger: {
       id: 'introTrigger',
       trigger: introTrigger,
       start: 'top top',
-      end: '+=450%',
-      scrub: 2.8,
+      end: '+=230%',
+      scrub: 0.5,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         const p = self.progress;
+        if (p >= 0.95) {
+          morphNav.classList.add('is-docked-pill');
+        } else {
+          morphNav.classList.remove('is-docked-pill');
+        }
         if (p >= 0.88) {
           morphNav.style.pointerEvents = 'auto';
           morphNav.removeAttribute('inert');
@@ -1261,11 +1261,9 @@ function initIntroAnimation() {
     width: () => `${Math.min(window.innerWidth * 0.95, 1240)}px`,
     height: 64,
     borderRadius: 9999,
-    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    backgroundColor: '#F8FAFC',
     borderColor: '#E2E8F0',
-    boxShadow: '0 10px 30px rgba(9, 20, 38, 0.08)',
-    backdropFilter: 'blur(16px)',
-    webkitBackdropFilter: 'blur(16px)',
+    boxShadow: 'none',
     padding: '0 24px',
     duration: 0.68,
     ease: 'power2.inOut'
@@ -1298,15 +1296,12 @@ function initIntroAnimation() {
 
   if (navControlsWrapper) {
     introTL.to(navControlsWrapper, {
-      width: '100%',
-      flexGrow: 1,
       opacity: 1,
-      marginLeft: 28,
-      marginRight: 0,
+      y: 0,
       pointerEvents: 'auto',
-      duration: 0.68,
-      ease: 'power2.inOut'
-    }, 0.32);
+      duration: 0.28,
+      ease: 'power2.out'
+    }, 0.72);
   }
 
   // Click logo -> smooth scroll to Hero section (#hero), never 0px intro
@@ -1341,8 +1336,8 @@ function initHeroAnimations() {
   const isRTL = false;
   const startX = -100;
 
-  // 1. Hero Left: Badge, Two-Tone Headline, Subhead, Expandable Brief, CTA Buttons (LEFT TO RIGHT ONLY)
-  const heroLeftItems = heroSection.querySelectorAll('.hero-left .pill-badge, .hero-left .hero-rnd-badge, .hero-left .hero-headline, .hero-left .hero-subhead, .hero-left .hero-brief-card, .hero-left .hero-ctas');
+  // 1. Hero Left: Two-Tone Headline, Subhead, Expandable Brief, CTA Buttons (LEFT TO RIGHT ONLY)
+  const heroLeftItems = heroSection.querySelectorAll('.hero-left .hero-headline, .hero-left .hero-subhead, .hero-left .hero-brief-card, .hero-left .hero-ctas');
   if (heroLeftItems.length) {
     gsap.fromTo(heroLeftItems, {
       x: startX,
@@ -2278,13 +2273,14 @@ function applyLanguage(lang) {
   document.querySelectorAll('.expandable-card').forEach(card => {
     const btn = card.querySelector('.more-details-btn, .card-trigger-pill');
     if (!btn) return;
-    const isExpanded = card.classList.contains('is-expanded');
-    if (isExpanded) {
-      btn.innerHTML = `<span>${lang === 'ar' ? 'إغلاق' : 'Close'}</span> <span class="trigger-arrow">×</span>`;
-    } else {
-      btn.innerHTML = `<span>${lang === 'ar' ? 'التفاصيل الكاملة' : 'More Details'}</span> <span class="trigger-arrow">↗</span>`;
-    }
+    btn.innerHTML = `<span>${lang === 'ar' ? 'التفاصيل الكاملة' : 'More Details'}</span> <span class="trigger-arrow">↗</span>`;
   });
+
+  // Update modal close button if present
+  const modalCloseLabel = document.querySelector('#spec-modal-close-btn .close-label');
+  if (modalCloseLabel) {
+    modalCloseLabel.textContent = lang === 'ar' ? 'إغلاق' : 'Close';
+  }
 
   // Update language toggle styling
   const langEn = document.querySelector('.lang-en');
@@ -2328,171 +2324,163 @@ function applyLanguage(lang) {
   }
 }
 
-// ── "MORE DETAILS ↗" TRIGGER PILL + FLOATING OVERLAY EXPANDABLE CARDS ──
-// Zero-Flicker Persistent Button + Decoupled Open/Close + 350ms Transition Grace Lock
+// ── OPTION A: SINGLE ROOT-LEVEL CENTERED SPEC MODAL ──────────
+// Clean Click-to-Open & Click/Esc-to-Close Architecture
 function initExpandableCards() {
-  const backdrop = document.getElementById('card-expand-backdrop') || document.getElementById('focus-backdrop');
+  const modal = document.getElementById('global-spec-modal');
+  const backdrop = document.getElementById('focus-backdrop') || document.getElementById('card-expand-backdrop');
+  const closeBtn = document.getElementById('spec-modal-close-btn');
   const cards = document.querySelectorAll('.expandable-card');
-  if (!cards.length) return;
+  if (!modal || !cards.length) return;
 
-  let activeCard = null;
+  const modalBadges = modal.querySelector('.spec-modal-badges');
+  const modalMedia = modal.querySelector('.spec-modal-media');
+  const modalTitle = modal.querySelector('.spec-modal-title');
+  const modalLead = modal.querySelector('.spec-modal-lead');
+  const modalBody = modal.querySelector('.spec-modal-body');
 
-  const isTouchDevice = () => {
-    return window.matchMedia('(hover: none), (pointer: coarse)').matches || window.innerWidth < 1024;
-  };
+  function openSpecModal(card) {
+    if (!card) return;
+    const isAr = (currentLang === 'ar') || (document.documentElement.getAttribute('lang') === 'ar');
 
-  function updateButtonLabel(card, isExpanded) {
-    const btn = card.querySelector('.more-details-btn, .card-trigger-pill');
-    if (!btn) return;
-    const isAr = document.documentElement.getAttribute('lang') === 'ar';
-    if (isExpanded) {
-      btn.setAttribute('aria-expanded', 'true');
-      btn.classList.add('is-active');
-      btn.innerHTML = `<span>${isAr ? 'إغلاق' : 'Close'}</span> <span class="trigger-arrow">×</span>`;
+    // 1. Populate Badges
+    if (modalBadges) {
+      modalBadges.innerHTML = '';
+      const badges = card.querySelectorAll('.project-badge, .project-code, .engine-badge, .bento-badge, .card-badge');
+      if (badges.length) {
+        badges.forEach(b => {
+          const badgeSpan = document.createElement('span');
+          badgeSpan.className = 'spec-modal-badge mono';
+          badgeSpan.textContent = b.textContent.trim();
+          modalBadges.appendChild(badgeSpan);
+        });
+      }
+    }
+
+    // 2. Populate Media / Visual Preview
+    if (modalMedia) {
+      modalMedia.innerHTML = '';
+      const img = card.querySelector('.project-card-image, .bento-cover, .hero-image');
+      if (img && img.src && !img.src.includes('undefined')) {
+        const clonedImg = document.createElement('img');
+        clonedImg.src = img.src;
+        clonedImg.alt = img.alt || 'Project specification visual';
+        clonedImg.className = 'spec-modal-img';
+        modalMedia.appendChild(clonedImg);
+        modalMedia.style.display = 'block';
+      } else {
+        modalMedia.style.display = 'none';
+      }
+    }
+
+    // 3. Populate Title
+    if (modalTitle) {
+      const titleEl = card.querySelector('.bento-title, .engine-name, .project-card-title, .showcase-title, h3');
+      modalTitle.textContent = titleEl ? titleEl.textContent.trim() : '';
+    }
+
+    // 4. Populate Lead Summary
+    if (modalLead) {
+      const leadEl = card.querySelector('.bento-desc, .engine-desc, .project-card-lead, .showcase-desc, p.lead, p:not(.spec-block-desc)');
+      modalLead.textContent = leadEl ? leadEl.textContent.trim() : '';
+    }
+
+    // 5. Populate Spec Drawer Content
+    if (modalBody) {
+      modalBody.innerHTML = '';
+      const drawer = card.querySelector('.spec-drawer-inner, .spec-drawer-scroll, .expanded-spec-drawer');
+      if (drawer) {
+        const clone = drawer.cloneNode(true);
+        // Strip out any redundant button tags from drawer content so only root close button exists
+        clone.querySelectorAll('.spec-close-pill, .spec-close-btn, .more-details-btn, .card-trigger-pill, .card-trigger-zone, button').forEach(el => el.remove());
+        modalBody.innerHTML = clone.innerHTML;
+      }
+    }
+
+    // 6. Update Close Button label according to language
+    if (closeBtn) {
+      const labelSpan = closeBtn.querySelector('.close-label');
+      if (labelSpan) {
+        labelSpan.textContent = isAr ? 'إغلاق' : 'Close';
+      }
+    }
+
+    // 7. RTL text alignment handling
+    if (isAr) {
+      modal.classList.add('is-rtl');
+      modal.setAttribute('dir', 'rtl');
     } else {
-      btn.setAttribute('aria-expanded', 'false');
-      btn.classList.remove('is-active');
-      btn.innerHTML = `<span>${isAr ? 'التفاصيل الكاملة' : 'More Details'}</span> <span class="trigger-arrow">↗</span>`;
+      modal.classList.remove('is-rtl');
+      modal.setAttribute('dir', 'ltr');
+    }
+
+    // 8. Open modal
+    modal.setAttribute('aria-hidden', 'false');
+    if (backdrop) backdrop.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-is-open');
+
+    // Focus close button for accessibility
+    if (closeBtn) {
+      setTimeout(() => closeBtn.focus(), 50);
     }
   }
 
-  function openCard(card) {
-    if (!card) return;
-    if (activeCard && activeCard !== card) {
-      closeCard(activeCard);
-    }
-
-    // Lock parent .card-slot minHeight to prevent page layout shift
-    const slot = card.closest('.card-slot');
-    if (slot && !slot.style.minHeight) {
-      slot.style.minHeight = `${card.offsetHeight}px`;
-    }
-
-    activeCard = card;
-    card.expandedAt = Date.now();
-    card.classList.add('is-expanded');
-    card.classList.add('expanded');
-    card.style.willChange = 'transform, opacity';
-    card.style.transform = window.innerWidth <= 1024 ? 'scale(1.02) translateZ(0)' : 'scale(1.05) translateZ(0)';
-
-    updateButtonLabel(card, true);
-
-    if (backdrop) {
-      backdrop.classList.add('active');
-      backdrop.classList.add('backdrop-active');
-    }
+  function closeSpecModal() {
+    document.body.classList.remove('modal-is-open');
+    if (modal) modal.setAttribute('aria-hidden', 'true');
+    if (backdrop) backdrop.setAttribute('aria-hidden', 'true');
   }
 
-  function closeCard(card) {
-    if (!card) return;
-
-    card.classList.remove('is-expanded');
-    card.classList.remove('expanded');
-    card.style.willChange = '';
-    card.style.transform = '';
-
-    updateButtonLabel(card, false);
-
-    // Restore slot height after transition
-    const slot = card.closest('.card-slot');
-    if (slot) {
-      setTimeout(() => {
-        if (!card.classList.contains('is-expanded')) {
-          slot.style.minHeight = '';
-        }
-      }, 500);
-    }
-
-    if (activeCard === card) {
-      activeCard = null;
-    }
-
-    const anyOpen = document.querySelector('.expandable-card.is-expanded, .expandable-card.expanded');
-    if (!anyOpen && backdrop) {
-      backdrop.classList.remove('active');
-      backdrop.classList.remove('backdrop-active');
-    }
-  }
-
-  function closeAllCards() {
-    document.querySelectorAll('.expandable-card.is-expanded, .expandable-card.expanded').forEach(c => {
-      c.justClosedUntil = Date.now() + 650;
-      closeCard(c);
-    });
-    activeCard = null;
-    if (backdrop) {
-      backdrop.classList.remove('active');
-      backdrop.classList.remove('backdrop-active');
-    }
-  }
-
+  // Attach click listeners to cards and trigger buttons
   cards.forEach(card => {
-    card.expandedAt = 0;
-    card.justClosedUntil = 0;
-
-    // Persistent Trigger Pill ("More Details ↗" / "Close ×")
+    // Single Trigger Button inside card
     const triggerBtn = card.querySelector('.more-details-btn, .card-trigger-pill');
     if (triggerBtn) {
       triggerBtn.classList.add('more-details-btn');
-
-      // PC Hover-Intent on button: open immediately without mouseleave cancellation
-      triggerBtn.addEventListener('mouseenter', () => {
-        if (isTouchDevice()) return;
-        if (Date.now() < (card.justClosedUntil || 0)) return;
-        if (card.classList.contains('is-expanded')) return;
-        openCard(card);
-      });
-
-      // Click / Tap (PC & Mobile): toggles open/close cleanly
       triggerBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (card.classList.contains('is-expanded')) {
-          card.justClosedUntil = Date.now() + 650;
-          closeCard(card);
-        } else {
-          if (Date.now() < (card.justClosedUntil || 0)) return;
-          openCard(card);
-        }
+        openSpecModal(card);
       });
     }
 
-    // PC: Cursor leaving the expanded floating card container closes it smoothly
-    // Grace window: ignore mouseleave for the first 350ms after opening
-    card.addEventListener('mouseleave', () => {
-      if (isTouchDevice()) return;
-      if (!card.classList.contains('is-expanded')) return;
-      if (Date.now() - (card.expandedAt || 0) < 350) return;
-      closeCard(card);
-    });
-
-    // Close buttons inside drawer (.spec-close-top, .spec-close-bottom, etc.)
-    card.querySelectorAll('.spec-close-pill, .spec-close-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        card.justClosedUntil = Date.now() + 650;
-        closeCard(card);
-      });
+    // Click anywhere on card (excluding other action buttons / inputs / sandbox controls)
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('button, a, input, select, textarea, .signoff-btn, .sandbox-pane')) {
+        return;
+      }
+      openSpecModal(card);
     });
   });
 
-  // Tapping/clicking blurred backdrop collapses any open card
+  // Close button click
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeSpecModal();
+    });
+  }
+
+  // Backdrop click closes modal
   if (backdrop) {
     backdrop.addEventListener('click', () => {
-      closeAllCards();
+      closeSpecModal();
     });
     backdrop.addEventListener('touchstart', () => {
-      closeAllCards();
+      closeSpecModal();
     }, { passive: true });
   }
 
-  // Escape key collapses Focus Mode
+  // Escape key closes modal
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && activeCard) {
-      closeAllCards();
+    if (e.key === 'Escape' && document.body.classList.contains('modal-is-open')) {
+      closeSpecModal();
     }
   });
+
+  // Expose helpers globally if needed
+  window.closeSpecModal = closeSpecModal;
+  window.openSpecModal = openSpecModal;
 }
 
 // ── ULTRA-SLOW UPWARD SCROLL REVEALS (y: 85px/95px -> 0px, duration: 2.3s–2.35s) ──
