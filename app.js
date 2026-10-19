@@ -1268,6 +1268,9 @@ function initIntroAnimation() {
         end: '+=160%',
         scrub: 0.6,
         invalidateOnRefresh: true,
+        anticipatePin: 1, // Forces GSAP to smooth out the pinning/unpinning math
+        pinSpacing: true,
+        pinType: "transform", // Prevents mobile browser fixed-position bugs
         onUpdate: (self) => {
           const p = self.progress;
           if (p >= 0.75) {
@@ -1305,7 +1308,8 @@ function initIntroAnimation() {
       x: 0,
       scale: S_MOBILE_DOCKED,
       duration: 1,
-      ease: 'power2.inOut'
+      ease: 'power2.inOut',
+      force3D: "auto"
     }, 0);
 
     // Continuous morph of #morph-navbar into docked pill
@@ -1317,10 +1321,11 @@ function initIntroAnimation() {
       backgroundColor: 'rgba(255, 255, 255, 0.92)',
       borderColor: '#E2E8F0',
       boxShadow: '0 12px 32px rgba(9, 20, 38, 0.08)',
-      backdropFilter: 'blur(12px)',
-      webkitBackdropFilter: 'blur(12px)',
+      backdropFilter: 'none',
+      webkitBackdropFilter: 'none',
       duration: 1,
-      ease: 'power2.inOut'
+      ease: 'power2.inOut',
+      force3D: "auto"
     }, 0);
 
     // Nav controls fade in smoothly as navbar finishes docking
@@ -1492,7 +1497,8 @@ function initIntroAnimation() {
       scale: S_DOCKED,
       left: leftEdge,
       duration: 0.44,
-      ease: 'power2.inOut'
+      ease: 'power2.inOut',
+      force3D: "auto"
     }, 0.48);
 
     // 5. Navbar shrinks from full-screen to 64px floating top pill

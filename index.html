@@ -90,7 +90,7 @@
             if (!isMobile) {
               var w = l.offsetWidth || 63;
               var x = (window.innerWidth / 2) - 24 - (1.75 * (w / 2));
-              b.style.transform = 'translateY(-50%) translate3d(' + x + 'px, 0, 0) scale(1.75)';
+              b.style.transform = 'translateY(-50%) translateX(' + x + 'px) scale(1.75)';
               b.style.transformOrigin = 'left center';
             } else {
               var ww = document.getElementById('wordmark-wrapper');
@@ -101,7 +101,7 @@
               var brandW = b.offsetWidth || (logoW + 26 + textW);
               var sInit = 0.85;
               var startX = (window.innerWidth / 2) - 16 - (sInit * (brandW / 2));
-              b.style.transform = 'translateY(-50%) translate3d(' + startX + 'px, 0, 0) scale(' + sInit + ')';
+              b.style.transform = 'translateY(-50%) translateX(' + startX + 'px) scale(' + sInit + ')';
               b.style.transformOrigin = 'left center';
             }
           }
