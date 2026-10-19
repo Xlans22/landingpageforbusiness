@@ -1,7 +1,12 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    FLAMINGO EMERGING TECHNOLOGIES — Application Logic
    GSAP + ScrollTrigger + Lenis + Floating Pill Nav + Tech Showcase + Search + i18n
    ═══════════════════════════════════════════════════════════════ */
+
+// Disable browser auto scroll restoration so intro starts cleanly at scroll = 0
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
 
 // ── TRANSLATIONS ──────────────────────────────────────────────
 const translations = {
@@ -1045,6 +1050,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initExpandableCards();
   initScrollReveals();
   initCircuitLine();
+  preDecodeProjectImages();
   setYear();
 });
 
@@ -1090,7 +1096,7 @@ function initIntroAnimation() {
   const introTrigger = document.getElementById('intro-scroll-spacer') || document.getElementById('intro-stage');
   const morphNav = document.getElementById('morph-navbar') || document.getElementById('main-nav');
   const navBrand = document.getElementById('brand-lockup') || document.getElementById('nav-brand');
-  const navLogo = document.getElementById('nav-logo');
+  const navLogo = document.getElementById('brand-emblem') || document.getElementById('nav-logo');
   const wordmarkWrapper = document.getElementById('wordmark-wrapper');
   const navWordmark = document.getElementById('nav-wordmark');
   const navControlsWrapper = document.getElementById('nav-controls-wrapper');
@@ -1101,6 +1107,23 @@ function initIntroAnimation() {
   if (!introTrigger || !morphNav || !navLogo || !navBrand) return;
 
   const isRTL = () => false;
+
+  const S_INIT = 1.75;
+  const S_DOCKED = 0.44;
+
+  // Exact formulas for horizontal centering with transformOrigin: 'left center':
+  const getLogoW = () => navLogo.offsetWidth || (80 * 1113 / 1414);
+  const getBrandW = () => {
+    const logoW = getLogoW();
+    const wrapW = wordmarkWrapper ? (wordmarkWrapper.offsetWidth || 318) : 318;
+    return logoW + 26 + wrapW;
+  };
+
+  // Stage 1: Bird emblem alone is in the exact dead center of viewport (50vw)
+  const getStage1X = () => (window.innerWidth / 2) - 24 - (S_INIT * (getLogoW() / 2));
+
+  // Stage 2: Combined lockup (bird + wordmark) is in the exact dead center of viewport (50vw)
+  const getStage2X = () => (window.innerWidth / 2) - 24 - (S_INIT * (getBrandW() / 2));
 
   // Set initial 0% state: strictly position: fixed; top: 0; left: 50%; transform: translateX(-50%);
   gsap.set(morphNav, {
@@ -1117,29 +1140,32 @@ function initIntroAnimation() {
     backdropFilter: 'blur(0px)',
     webkitBackdropFilter: 'blur(0px)',
     pointerEvents: 'none',
-    padding: '0 24px',
+    padding: 0,
     zIndex: 1000
   });
   morphNav.setAttribute('inert', '');
 
+  // Stage 1: Dead center positioning for bird emblem alone at scroll = 0
   gsap.set(navBrand, {
-    x: 0,
-    scale: 1.0,
-    clearProps: 'transform'
+    position: 'absolute',
+    left: 24,
+    top: '50%',
+    yPercent: -50,
+    x: () => getStage1X(),
+    scale: S_INIT,
+    transformOrigin: 'left center'
   });
 
   gsap.set(navLogo, {
-    height: 125,
-    width: 'auto',
-    scale: 1.0,
-    clearProps: 'transform'
+    height: 80,
+    clearProps: 'width,scale,transform'
   });
 
   if (wordmarkWrapper) {
     gsap.set(wordmarkWrapper, {
-      width: 0,
+      width: 318,
       opacity: 1,
-      marginLeft: 0,
+      marginLeft: 26,
       marginRight: 0,
       overflow: 'hidden',
       pointerEvents: 'none'
@@ -1148,9 +1174,10 @@ function initIntroAnimation() {
 
   if (navWordmark) {
     gsap.set(navWordmark, {
-      fontSize: '3.1rem',
+      fontSize: '2.8rem',
       fontWeight: 800,
-      lineHeight: 1.05
+      lineHeight: 1,
+      color: '#0B1528'
     });
   }
 
@@ -1182,18 +1209,18 @@ function initIntroAnimation() {
     gsap.set(scrollIndicator, { opacity: 1, y: 0 });
   }
 
-  // Master timeline driven by #intro-scroll-spacer (height: 250vh, scrub: 0.5, no pinning on navbar)
+  // ── SCROLL-TRIGGERED TIMELINE: 3-STAGE CHOREOGRAPHY DRIVEN BY USER SCROLL ──
   const introTL = gsap.timeline({
     scrollTrigger: {
       id: 'introTrigger',
       trigger: introTrigger,
       start: 'top top',
-      end: '+=230%',
-      scrub: 0.5,
+      end: '+=250%',
+      scrub: 0.6,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         const p = self.progress;
-        if (p >= 0.95) {
+        if (p >= 0.75) {
           morphNav.classList.add('is-docked-pill');
         } else {
           morphNav.classList.remove('is-docked-pill');
@@ -1213,8 +1240,7 @@ function initIntroAnimation() {
 
   introST = introTL.scrollTrigger;
 
-  // Step 1: Snappy start right as scroll begins (0 -> 0.15)
-  // Scroll indicator fades out fast; emblem adjusts; wordmark-wrapper opens swiftly
+  // 1. Scroll indicator fades out promptly as user begins scrolling
   if (scrollIndicator) {
     introTL.to(scrollIndicator, {
       opacity: 0,
@@ -1224,38 +1250,31 @@ function initIntroAnimation() {
     }, 0);
   }
 
-  introTL.to(navLogo, {
-    height: 88,
-    width: 'auto',
-    duration: 0.15,
-    ease: 'power2.out'
-  }, 0);
+  // 2. Stage 1 -> Stage 2: Logo shifts to the left a little while scrolling down (making room for wordmark)
+  introTL.fromTo(navBrand,
+    { x: () => getStage1X(), scale: S_INIT },
+    { x: () => getStage2X(), scale: S_INIT, duration: 0.22, ease: 'power2.out' },
+    0
+  );
 
-  if (wordmarkWrapper) {
-    introTL.to(wordmarkWrapper, {
-      width: 345,
-      marginLeft: 16,
-      marginRight: 0,
-      duration: 0.15,
-      ease: 'power2.out'
-    }, 0);
-  }
-
-  // Step 2: Snappy Letter Reveal (starts at 0.08, stagger: 0.025s)
-  // FLAMINGO snaps into place fast right after scrolling starts
+  // 3. Stage 2: Word appears letter by letter smoothly with animation beside the logo
   if (wmChars.length) {
-    introTL.to(wmChars, {
-      yPercent: 0,
-      opacity: 1,
-      stagger: 0.025,
-      duration: 0.18,
-      ease: 'power3.out'
-    }, 0.08);
+    introTL.fromTo(wmChars,
+      { yPercent: 110, opacity: 0 },
+      { yPercent: 0, opacity: 1, stagger: 0.025, duration: 0.20, ease: 'power2.out' },
+      0.10
+    );
   }
 
-  // Step 3 (0.32 -> 1.00 — Ultra-Smooth Stretched Window-to-Navbar Morph):
-  // Once the word is visible, stretch out the final morph phase where the full-screen window
-  // contracts into the 64px pill navbar, gliding smoothly and slowly over the extended scrub distance
+  // 4. Stage 3: After that they both as a whole minimize in size and move to their right place in the navbar
+  introTL.to(navBrand, {
+    x: 0,
+    scale: S_DOCKED,
+    duration: 0.44,
+    ease: 'power2.inOut'
+  }, 0.48);
+
+  // 5. Navbar shrinks from full-screen to 64px floating top pill
   introTL.to(morphNav, {
     top: 16,
     width: () => `${Math.min(window.innerWidth * 0.95, 1240)}px`,
@@ -1264,45 +1283,37 @@ function initIntroAnimation() {
     backgroundColor: '#F8FAFC',
     borderColor: '#E2E8F0',
     boxShadow: 'none',
-    padding: '0 24px',
-    duration: 0.68,
+    padding: 0,
+    duration: 0.44,
     ease: 'power2.inOut'
-  }, 0.32);
+  }, 0.48);
 
-  introTL.to(navLogo, {
-    height: 34,
-    width: 'auto',
-    duration: 0.68,
-    ease: 'power2.inOut'
-  }, 0.32);
-
-  if (navWordmark) {
-    introTL.to(navWordmark, {
-      fontSize: '1.2rem',
-      duration: 0.68,
-      ease: 'power2.inOut'
-    }, 0.32);
-  }
-
-  if (wordmarkWrapper) {
-    introTL.to(wordmarkWrapper, {
-      width: 135,
-      marginLeft: 10,
-      marginRight: 0,
-      duration: 0.68,
-      ease: 'power2.inOut'
-    }, 0.32);
-  }
-
+  // 6. Nav controls (links and action buttons) fade in towards the end of the glide
   if (navControlsWrapper) {
     introTL.to(navControlsWrapper, {
       opacity: 1,
       y: 0,
       pointerEvents: 'auto',
-      duration: 0.28,
+      duration: 0.20,
       ease: 'power2.out'
     }, 0.72);
   }
+
+  // Refresh positions when logo loads and on window resize
+  if (navLogo) {
+    navLogo.addEventListener('load', () => {
+      ScrollTrigger.refresh();
+      if (introST && introST.progress === 0) {
+        gsap.set(navBrand, { x: getStage1X(), scale: S_INIT });
+      }
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    if (introST && introST.progress === 0) {
+      gsap.set(navBrand, { x: getStage1X(), scale: S_INIT });
+    }
+  });
 
   // Click logo -> smooth scroll to Hero section (#hero), never 0px intro
   if (navBrand) {
@@ -1354,6 +1365,13 @@ function initHeroAnimations() {
         trigger: '#hero',
         start: 'top 82%',
         toggleActions: 'play none none none'
+      },
+      onComplete: () => {
+        const brief = heroSection.querySelector('.hero-brief-card');
+        if (brief) {
+          brief.classList.add('is-revealed');
+          gsap.set(brief, { clearProps: 'y,transform' });
+        }
       }
     });
   }
@@ -2120,7 +2138,10 @@ function initInteractions() {
             y: 0,
             duration: 0.4,
             ease: 'power2.out',
-            clearProps: 'transform,opacity'
+            clearProps: 'transform,opacity',
+            onComplete: () => {
+              card.classList.add('is-revealed');
+            }
           });
         } else {
           slot.classList.add('hidden');
@@ -2414,10 +2435,21 @@ function initExpandableCards() {
       modal.setAttribute('dir', 'ltr');
     }
 
-    // 8. Open modal
+    // 8. Open modal & Pause Lenis Smooth Scroll
     modal.setAttribute('aria-hidden', 'false');
     if (backdrop) backdrop.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-is-open');
+
+    // Reset inner content scroll position to top
+    const modalInner = modal.querySelector('.spec-modal-inner');
+    if (modalInner) {
+      modalInner.scrollTop = 0;
+    }
+
+    // Pause Lenis smooth scroll so mouse wheel events exclusively scroll the modal
+    if (lenis) {
+      lenis.stop();
+    }
 
     // Focus close button for accessibility
     if (closeBtn) {
@@ -2429,7 +2461,17 @@ function initExpandableCards() {
     document.body.classList.remove('modal-is-open');
     if (modal) modal.setAttribute('aria-hidden', 'true');
     if (backdrop) backdrop.setAttribute('aria-hidden', 'true');
+
+    // Resume Lenis smooth scroll
+    if (lenis) {
+      lenis.start();
+    }
   }
+
+  // Prevent Lenis / window from hijacking mouse-wheel scrolling inside modal
+  modal.addEventListener('wheel', (e) => {
+    e.stopPropagation();
+  }, { passive: false });
 
   // Attach click listeners to cards and trigger buttons
   cards.forEach(card => {
@@ -2463,13 +2505,19 @@ function initExpandableCards() {
 
   // Backdrop click closes modal
   if (backdrop) {
-    backdrop.addEventListener('click', () => {
+    backdrop.addEventListener('click', (e) => {
+      e.preventDefault();
       closeSpecModal();
     });
-    backdrop.addEventListener('touchstart', () => {
-      closeSpecModal();
-    }, { passive: true });
   }
+
+  // Click anywhere outside modal card box closes modal
+  document.addEventListener('click', (e) => {
+    if (!document.body.classList.contains('modal-is-open')) return;
+    if (modal && !modal.contains(e.target) && !e.target.closest('.more-details-btn, .card-trigger-pill, .expandable-card')) {
+      closeSpecModal();
+    }
+  });
 
   // Escape key closes modal
   window.addEventListener('keydown', (e) => {
@@ -2575,20 +2623,26 @@ function initScrollReveals() {
   // 5. Core Disciplines Bento Cards (y: 95px -> 0px, duration: 2.35s, stagger: 0.24s)
   const bentoCards = document.querySelectorAll('#capabilities .bento-card');
   if (bentoCards.length) {
-    gsap.fromTo(bentoCards, {
-      y: 95,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 2.35,
-      stagger: 0.24,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '#capabilities .bento-grid',
-        start: 'top 82%',
-        toggleActions: 'play none none none'
-      }
+    bentoCards.forEach((card, idx) => {
+      gsap.fromTo(card, {
+        y: 95,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 2.35,
+        delay: idx * 0.18,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#capabilities .bento-grid',
+          start: 'top 82%',
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          card.classList.add('is-revealed');
+          gsap.set(card, { clearProps: 'y,transform' });
+        }
+      });
     });
   }
 
@@ -2607,6 +2661,10 @@ function initScrollReveals() {
         trigger: card,
         start: 'top 82%',
         toggleActions: 'play none none none'
+      },
+      onComplete: () => {
+        card.classList.add('is-revealed');
+        gsap.set(card, { clearProps: 'y,transform' });
       }
     });
   });
@@ -2634,20 +2692,26 @@ function initScrollReveals() {
 
     const projectCards = projectShowcase.querySelectorAll('.project-card');
     if (projectCards.length) {
-      gsap.fromTo(projectCards, {
-        y: 90,
-        opacity: 0
-      }, {
-        y: 0,
-        opacity: 1,
-        duration: 2.35,
-        stagger: 0.24,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '.project-cards-grid',
-          start: 'top 82%',
-          toggleActions: 'play none none none'
-        }
+      projectCards.forEach((card, idx) => {
+        gsap.fromTo(card, {
+          y: 90,
+          opacity: 0
+        }, {
+          y: 0,
+          opacity: 1,
+          duration: 2.35,
+          delay: idx * 0.18,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.project-cards-grid',
+            start: 'top 82%',
+            toggleActions: 'play none none none'
+          },
+          onComplete: () => {
+            card.classList.add('is-revealed');
+            gsap.set(card, { clearProps: 'y,transform' });
+          }
+        });
       });
     }
   }
@@ -2655,80 +2719,104 @@ function initScrollReveals() {
   // 7. Solution Blueprints Cards (y: 95px -> 0px, duration: 2.35s, stagger: 0.24s)
   const bpCards = document.querySelectorAll('.blueprints-grid .bp-card');
   if (bpCards.length) {
-    gsap.fromTo(bpCards, {
-      y: 95,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 2.35,
-      stagger: 0.24,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.blueprints-grid',
-        start: 'top 82%',
-        toggleActions: 'play none none none'
-      }
+    bpCards.forEach((card, idx) => {
+      gsap.fromTo(card, {
+        y: 95,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 2.35,
+        delay: idx * 0.18,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.blueprints-grid',
+          start: 'top 82%',
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          card.classList.add('is-revealed');
+          gsap.set(card, { clearProps: 'y,transform' });
+        }
+      });
     });
   }
 
   // 8. Ecosystem Partners Cards (y: 95px -> 0px, duration: 2.35s, stagger: 0.24s)
   const partnerCards = document.querySelectorAll('.partners-grid .partner-card');
   if (partnerCards.length) {
-    gsap.fromTo(partnerCards, {
-      y: 95,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 2.35,
-      stagger: 0.24,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.partners-grid',
-        start: 'top 82%',
-        toggleActions: 'play none none none'
-      }
+    partnerCards.forEach((card, idx) => {
+      gsap.fromTo(card, {
+        y: 95,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 2.35,
+        delay: idx * 0.18,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.partners-grid',
+          start: 'top 82%',
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          card.classList.add('is-revealed');
+          gsap.set(card, { clearProps: 'y,transform' });
+        }
+      });
     });
   }
 
   // 9. Safety Laws / Governance Pillars (y: 95px -> 0px, duration: 2.35s, stagger: 0.24s)
   const govCards = document.querySelectorAll('.governance-grid .gov-card');
   if (govCards.length) {
-    gsap.fromTo(govCards, {
-      y: 95,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 2.35,
-      stagger: 0.24,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.governance-grid',
-        start: 'top 82%',
-        toggleActions: 'play none none none'
-      }
+    govCards.forEach((card, idx) => {
+      gsap.fromTo(card, {
+        y: 95,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 2.35,
+        delay: idx * 0.18,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.governance-grid',
+          start: 'top 82%',
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          card.classList.add('is-revealed');
+          gsap.set(card, { clearProps: 'y,transform' });
+        }
+      });
     });
   }
 
   // 10. Contact Section: HQ Card, Direct Contacts & Intake Form (y: 95px -> 0px, duration: 2.35s, stagger: 0.24s)
   const contactBlocks = document.querySelectorAll('.contact-left .hq-card, .contact-left .direct-contacts, .contact-right .intake-form');
   if (contactBlocks.length) {
-    gsap.fromTo(contactBlocks, {
-      y: 95,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 2.35,
-      stagger: 0.24,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.contact-grid',
-        start: 'top 82%',
-        toggleActions: 'play none none none'
-      }
+    contactBlocks.forEach((block, idx) => {
+      gsap.fromTo(block, {
+        y: 95,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 2.35,
+        delay: idx * 0.18,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.contact-grid',
+          start: 'top 82%',
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          block.classList.add('is-revealed');
+          gsap.set(block, { clearProps: 'y,transform' });
+        }
+      });
     });
   }
 }
@@ -2777,3 +2865,19 @@ function setYear() {
   const el = document.getElementById('year');
   if (el) el.textContent = new Date().getFullYear();
 }
+
+// ── PRE-DECODE PROJECT IMAGES (Zero Main-Thread Scroll Lag) ───
+function preDecodeProjectImages() {
+  if ('decode' in HTMLImageElement.prototype) {
+    document.querySelectorAll('.project-card-image').forEach(img => {
+      if (img.complete) {
+        img.decode().catch(() => {});
+      } else {
+        img.addEventListener('load', () => {
+          img.decode().catch(() => {});
+        }, { once: true });
+      }
+    });
+  }
+}
+

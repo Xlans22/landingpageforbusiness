@@ -166,7 +166,7 @@ html[dir="rtl"] .scroll-progress-bar {
 .pill-nav-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
   height: 100%;
   padding: 0 24px;
@@ -174,42 +174,52 @@ html[dir="rtl"] .scroll-progress-bar {
   position: relative;
 }
 
-/* Brand Lockup: Centered 0% Emblem */
+/* Brand Lockup: Anchored consistently at left: 24px, vertically centered inside #morph-navbar.
+   Initial CSS transform renders the bird emblem directly in the dead center at scale(1.4) to eliminate any FOUC or flash on the far left. */
+#brand-lockup,
 .nav-brand-pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  position: absolute !important;
+  left: 24px !important;
+  top: 50% !important;
+  transform-origin: left center !important;
+  transform: translateY(-50%) translateX(calc(50vw - 79.1px)) scale(1.75);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex-shrink: 0 !important;
   text-decoration: none;
   cursor: pointer;
   z-index: 2;
   user-select: none;
+  margin: 0 !important;
 }
 
-/* High-res Native Emblem (No scale downsampling, auto rendering, visual size controlled via height) */
-.nav-pill-logo {
-  height: 125px;
+/* High-res Native Emblem (native base size ~80px, crisp high-DPI rendering) */
+#brand-emblem,
+#nav-logo,
+.nav-pill-logo,
+.brand-emblem {
+  height: 80px !important;
   width: auto;
+  aspect-ratio: 1113 / 1414;
+  image-rendering: -webkit-optimize-contrast;
   image-rendering: auto;
   object-fit: contain;
   filter: none !important;
-  display: block;
+  display: block !important;
+  flex-shrink: 0 !important;
 }
 
-/* Enforce strict scrollbar removal on navbar and brand elements */
+/* Enforce strict scrollbar removal on wordmark and brand lockup */
 #wordmark-wrapper,
-#brand-lockup,
-#nav-controls-wrapper,
-#morph-navbar {
+#brand-lockup {
   overflow: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 
 #wordmark-wrapper::-webkit-scrollbar,
-#brand-lockup::-webkit-scrollbar,
-#nav-controls-wrapper::-webkit-scrollbar,
-#morph-navbar::-webkit-scrollbar {
+#brand-lockup::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
@@ -246,33 +256,36 @@ html[lang="ar"] [data-i18n]:not(.nav-wordmark):not(.nav-wordmark *):not(.char) {
   unicode-bidi: plaintext;
 }
 
-/* Wordmark Wrapper: Smooth width opening, overflow: hidden without scrollbar */
+/* Wordmark Wrapper: Native high-res base size, letters revealed via .char yPercent */
+#wordmark-wrapper,
 .wordmark-wrapper {
-  width: 0px;
+  width: 318px !important;
   opacity: 1;
   overflow: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
   white-space: nowrap;
   pointer-events: none;
-  display: inline-flex;
-  align-items: center;
-  margin-left: 0px;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-left: 26px !important;
   margin-right: 0px;
   box-sizing: border-box;
+  flex-shrink: 0 !important;
 }
 
+#nav-wordmark,
 .nav-wordmark {
   overflow: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
-  padding-right: 12px;
-  font-family: 'Space Grotesk', -apple-system, sans-serif;
-  font-size: 3.1rem;
+  padding-right: 0;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 2.8rem;
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1;
   letter-spacing: -0.02em;
-  color: #091426;
+  color: #0B1528;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
@@ -281,29 +294,69 @@ html[lang="ar"] [data-i18n]:not(.nav-wordmark):not(.nav-wordmark *):not(.char) {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.wm-letter-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.wm-letter-wrap.wm-letter-o {
+  display: inline-block;
+  letter-spacing: -0.04em;
+}
+
 .nav-wordmark .char {
   display: inline-block;
-  line-height: 1.05;
+  line-height: 1;
+  color: #0B1528;
   filter: none !important;
   -webkit-font-smoothing: antialiased;
   will-change: transform, opacity;
+  opacity: 0;
 }
 
-/* Nav Controls Wrapper (Links + Actions) permanently in static natural flex row */
+/* Custom Two-Tone Split-Cyan "FLAMINGO" Wordmark */
+/* Letter "I": Top ~28% bright cyan (#00C8FF), lower ~72% deep navy (#0B1528) with crisp horizontal split */
+.nav-wordmark .char[data-accent="i"] {
+  background: linear-gradient(180deg, #00C8FF 0%, #00C8FF 28%, #0B1528 28%, #0B1528 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+/* Letter "O": Top arch (~32%) bright cyan (#00C8FF), lower body deep navy (#0B1528), compact & sleek */
+.nav-wordmark .char[data-accent="o"] {
+  background: linear-gradient(180deg, #00C8FF 0%, #00C8FF 32%, #0B1528 32%, #0B1528 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+  letter-spacing: -0.04em;
+}
+
+/* Nav Controls Wrapper (Links + Actions) */
 #nav-controls-wrapper,
 .nav-controls-wrapper {
   display: flex !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  flex: 1 !important;
-  margin-left: 28px !important;
+  justify-content: flex-end !important;
+  gap: clamp(36px, 4vw, 64px) !important;
+  margin-left: auto !important;
   margin-right: 0 !important;
   white-space: nowrap !important;
   box-sizing: border-box !important;
   opacity: 0;
-  transform: translateY(6px) translateZ(0);
   pointer-events: none;
   will-change: opacity, transform;
+  max-width: calc(100% - 200px) !important;
+}
+
+.floating-pill-nav.docked #nav-controls-wrapper,
+#morph-navbar.is-docked-pill #nav-controls-wrapper {
+  pointer-events: auto;
 }
 
 #morph-navbar:not(.is-docked-pill) {
@@ -343,26 +396,16 @@ html[lang="ar"] [data-i18n]:not(.nav-wordmark):not(.nav-wordmark *):not(.char) {
   left: 50%;
   transform: translateX(-50%);
   border-radius: 9999px;
-  padding: 0 24px;
+  padding: 0;
   border: 1px solid #E2E8F0;
   pointer-events: auto;
 }
 .floating-pill-nav.docked .pill-nav-inner {
-  padding: 0;
+  padding: 0 24px;
   width: 100%;
 }
-.floating-pill-nav.docked .nav-pill-logo {
-  height: 34px;
-  width: auto;
-}
 .floating-pill-nav.docked .wordmark-wrapper {
-  width: 135px;
-  margin-left: 10px;
-  margin-right: 0;
   pointer-events: auto;
-}
-.floating-pill-nav.docked .nav-wordmark {
-  font-size: 1.2rem;
 }
 .floating-pill-nav.docked .nav-controls-wrapper {
   width: 100%;
@@ -370,24 +413,26 @@ html[lang="ar"] [data-i18n]:not(.nav-wordmark):not(.nav-wordmark *):not(.char) {
   opacity: 1;
   margin-left: 28px;
   margin-right: 0;
+  gap: clamp(36px, 4vw, 64px) !important;
   pointer-events: auto;
   overflow: visible;
+  transform: translateY(0) translateZ(0);
 }
 
 /* Center: Navigation Links */
 .nav-links-pill {
   display: flex;
   align-items: center;
-  gap: 1.15rem;
+  gap: clamp(0.75rem, 1.1vw, 1.15rem);
   opacity: 1;
 }
 
 .pill-link {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 0.85vw, 0.85rem);
   font-weight: 500;
   color: #091426;
-  padding: 6px 10px;
+  padding: 6px clamp(6px, 0.75vw, 10px);
   border-radius: 9999px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
@@ -1182,6 +1227,10 @@ html[dir="rtl"] .editorial-header.dark .heading-part2 {
   flex-direction: column;
 }
 
+body.modal-is-open {
+  overflow: hidden !important;
+}
+
 #focus-backdrop {
   position: fixed !important;
   inset: 0 !important;
@@ -1192,6 +1241,7 @@ html[dir="rtl"] .editorial-header.dark .heading-part2 {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
+  cursor: pointer;
   transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease !important;
 }
 
@@ -1208,17 +1258,18 @@ body.modal-is-open #focus-backdrop {
   transform: translate(-50%, -48%) scale(0.96) translateZ(0) !important;
   width: min(92vw, 620px) !important;
   max-height: 85vh !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
   background: #FFFFFF !important;
   border: 1.5px solid #0284C7 !important;
   border-radius: 24px !important;
   box-shadow: 0 32px 64px rgba(9, 20, 38, 0.22) !important;
-  padding: 32px !important;
+  padding: 0 !important;
   z-index: 10000 !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
   transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease !important;
 }
 
@@ -1234,6 +1285,13 @@ body.modal-is-open #global-spec-modal {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 32px;
+  max-height: 85vh;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(2, 132, 199, 0.45) transparent;
 }
 
 .spec-modal-topbar {
@@ -1339,17 +1397,20 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
   flex-direction: row;
 }
 
-/* Custom Scrollbar for Modal */
-#global-spec-modal::-webkit-scrollbar {
+/* Custom Scrollbar for Modal Inner (Subtle, slim, safely inside rounded borders) */
+.spec-modal-inner::-webkit-scrollbar {
   width: 6px;
 }
-#global-spec-modal::-webkit-scrollbar-track {
-  background: rgba(226, 232, 240, 0.5);
+.spec-modal-inner::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 16px 0;
+}
+.spec-modal-inner::-webkit-scrollbar-thumb {
+  background: rgba(2, 132, 199, 0.45);
   border-radius: 999px;
 }
-#global-spec-modal::-webkit-scrollbar-thumb {
-  background: #0284C7;
-  border-radius: 999px;
+.spec-modal-inner::-webkit-scrollbar-thumb:hover {
+  background: rgba(2, 132, 199, 0.75);
 }
 
 /* Dark Mode Modal Support */
@@ -1357,6 +1418,15 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
   background: #181A20 !important;
   border-color: #00D2FF !important;
   box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5) !important;
+}
+.dark .spec-modal-inner {
+  scrollbar-color: rgba(0, 210, 255, 0.45) transparent;
+}
+.dark .spec-modal-inner::-webkit-scrollbar-thumb {
+  background: rgba(0, 210, 255, 0.45);
+}
+.dark .spec-modal-inner::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 210, 255, 0.75);
 }
 .dark .spec-modal-topbar {
   border-bottom-color: #2D3748;
@@ -1400,9 +1470,12 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
 }
 
 .expandable-card:hover {
-  transform: translateY(-4px) !important;
   border-color: #38BDF8 !important;
   box-shadow: 0 16px 32px rgba(9, 20, 38, 0.07) !important;
+}
+
+.expandable-card.is-revealed:hover {
+  transform: translateY(-4px) !important;
 }
 
 /* Bottom Trigger Pill Zone — Persistent single button node */
@@ -3325,6 +3398,9 @@ html[dir="rtl"] .form-select {
   overflow: hidden;
   background: #0B0F19;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  content-visibility: visible;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .project-card-image {
@@ -3332,6 +3408,8 @@ html[dir="rtl"] .form-select {
   height: 100%;
   object-fit: cover;
   display: block;
+  content-visibility: visible;
+  transform: translateZ(0);
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

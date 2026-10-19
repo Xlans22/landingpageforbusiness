@@ -26,8 +26,8 @@
        UNIVERSAL GRADUAL BACKGROUND BLUR BACKDROP & GLOBAL SPEC MODAL
   ═══════════════════════════════════════════════════════════════ -->
   <div id="focus-backdrop" aria-hidden="true"></div>
-  <div id="global-spec-modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="spec-modal-inner">
+  <div id="global-spec-modal" role="dialog" aria-modal="true" aria-hidden="true" data-lenis-prevent>
+    <div class="spec-modal-inner" data-lenis-prevent>
       <div class="spec-modal-topbar">
         <div class="spec-modal-badges"></div>
         <button type="button" id="spec-modal-close-btn" class="spec-modal-close" aria-label="Close modal">
@@ -60,13 +60,25 @@
     <div class="pill-nav-inner" id="pill-nav-inner">
       <!-- Left: Brand Lockup (Emblem + Wordmark FLAMINGO) -->
       <a href="#hero" class="nav-brand-pill" id="brand-lockup" aria-label="Flamingo Emerging Technologies">
-        <img src="public/flamingo-icon.png" alt="FET Emblem" class="nav-pill-logo" id="nav-logo" width="500" height="600" />
+        <img src="public/flamingo-icon.png" alt="FET Emblem" class="nav-pill-logo brand-emblem" id="brand-emblem" width="1113" height="1414" />
         <div class="wordmark-wrapper" id="wordmark-wrapper">
           <span class="nav-wordmark" id="nav-wordmark">
-            <span class="wm-letter-wrap"><span class="char" data-accent="false">F</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">L</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">A</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">M</span></span><span class="wm-letter-wrap"><span class="char" data-accent="i">I</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">N</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">G</span></span><span class="wm-letter-wrap"><span class="char" data-accent="o">O</span></span>
+            <span class="wm-letter-wrap"><span class="char" data-accent="false">F</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">L</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">A</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">M</span></span><span class="wm-letter-wrap"><span class="char" data-accent="i">I</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">N</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">G</span></span><span class="wm-letter-wrap wm-letter-o"><span class="char" data-accent="o">O</span></span>
           </span>
         </div>
       </a>
+      <script>
+        (function() {
+          var b = document.getElementById('brand-lockup');
+          var l = document.getElementById('brand-emblem') || document.getElementById('nav-logo');
+          if (b && l) {
+            var w = l.offsetWidth || 63;
+            var x = (window.innerWidth / 2) - 24 - (1.75 * (w / 2));
+            b.style.transform = 'translateY(-50%) translate3d(' + x + 'px, 0, 0) scale(1.75)';
+            b.style.transformOrigin = 'left center';
+          }
+        })();
+      </script>
 
       <!-- Center & Right Controls Wrapper -->
       <div class="nav-controls-wrapper" id="nav-controls-wrapper">
@@ -734,10 +746,13 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="hardware automotive" data-card-id="proj-hw-01">
               <div class="project-image-wrap">
-                <img src="/images/project-speed-radar.jpg"
+                <img src="images/project-speed-radar.jpg"
                      alt="Smart Roadside Speed Monitoring & Edge-ANPR Radar Unit"
                      class="project-card-image"
-                     loading="lazy"
+                     width="400"
+                     height="220"
+                     loading="eager"
+                     decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
                   <svg viewBox="0 0 400 220" fill="none" class="fallback-svg">
@@ -751,14 +766,8 @@
                     <circle cx="265" cy="45" r="4" fill="#00D2FF"/>
                     <rect x="250" y="24" width="85" height="18" rx="3" fill="#181A20" stroke="#00D2FF" stroke-width="0.8"/>
                     <text x="292" y="36" fill="#00D2FF" font-family="'JetBrains Mono'" font-size="9" text-anchor="middle">114 KM/H [ANPR]</text>
-                    <rect x="20" y="20" width="130" height="20" rx="3" fill="rgba(2,132,199,0.1)" stroke="#0284C7" stroke-width="0.8"/>
-                    <text x="28" y="34" fill="#0284C7" font-family="'JetBrains Mono'" font-size="9">FET-HW-01 // RADAR</text>
                     <path d="M 30 180 Q 60 160, 90 180 T 150 180 T 210 180 T 270 180 T 330 180 T 370 180" fill="none" stroke="#00D2FF" stroke-width="1.2" stroke-opacity="0.4"/>
                   </svg>
-                </div>
-                <div class="project-image-overlay">
-                  <span class="project-code mono">FET-HW-01</span>
-                  <span class="project-badge" data-i18n="proj1_badge">PROPRIETARY HARDWARE + EDGE AI</span>
                 </div>
               </div>
               <div class="project-card-body">
@@ -812,16 +821,17 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="automotive hardware" data-card-id="proj-auto-02">
               <div class="project-image-wrap">
-                <img src="/images/project-fleet-telemetry.jpg"
+                <img src="images/project-fleet-telemetry.jpg"
                      alt="Automotive CAN-Bus Telemetry & Fleet Diagnostics Module"
                      class="project-card-image"
-                     loading="lazy"
+                     width="400"
+                     height="220"
+                     loading="eager"
+                     decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
                   <svg viewBox="0 0 400 220" fill="none" class="fallback-svg">
                     <rect width="400" height="220" fill="#0B101D"/>
-                    <rect x="20" y="20" width="140" height="20" rx="3" fill="rgba(2,132,199,0.1)" stroke="#0284C7" stroke-width="0.8"/>
-                    <text x="28" y="34" fill="#0284C7" font-family="'JetBrains Mono'" font-size="9">FET-AUTO-02 // CAN-BUS</text>
                     <line x1="40" y1="90" x2="360" y2="90" stroke="#00D2FF" stroke-width="1.5" stroke-opacity="0.4"/>
                     <line x1="40" y1="120" x2="360" y2="120" stroke="#0284C7" stroke-width="1.5" stroke-opacity="0.4"/>
                     <circle cx="80" cy="90" r="5" fill="#00D2FF"/>
@@ -834,10 +844,6 @@
                     <text x="285" y="115" fill="#00D2FF" font-family="'JetBrains Mono'" font-size="8" text-anchor="middle">LIVE 5G STREAM</text>
                     <text x="40" y="180" fill="#64748B" font-family="'JetBrains Mono'" font-size="8">ID: 0x7DF [02 01 0D 00 00 00 00 00] // VEHICLE SPEED OK</text>
                   </svg>
-                </div>
-                <div class="project-image-overlay">
-                  <span class="project-code mono">FET-AUTO-02</span>
-                  <span class="project-badge" data-i18n="proj2_badge">AUTOMOTIVE HARDWARE + CLOUD</span>
                 </div>
               </div>
               <div class="project-card-body">
@@ -891,16 +897,17 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="hardware software" data-card-id="proj-uav-03">
               <div class="project-image-wrap">
-                <img src="/images/project-edge-vision.jpg"
+                <img src="images/project-edge-vision.jpg"
                      alt="Autonomous Drone & Industrial Optical Inspection System"
                      class="project-card-image"
-                     loading="lazy"
+                     width="400"
+                     height="220"
+                     loading="eager"
+                     decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
                   <svg viewBox="0 0 400 220" fill="none" class="fallback-svg">
                     <rect width="400" height="220" fill="#0B101D"/>
-                    <rect x="20" y="20" width="135" height="20" rx="3" fill="rgba(2,132,199,0.1)" stroke="#0284C7" stroke-width="0.8"/>
-                    <text x="28" y="34" fill="#0284C7" font-family="'JetBrains Mono'" font-size="9">FET-UAV-03 // OPTICAL</text>
                     <path d="M 120 70 L 140 70 M 120 70 L 120 90 M 280 70 L 260 70 M 280 70 L 280 90 M 120 150 L 140 150 M 120 150 L 120 130 M 280 150 L 260 150 M 280 150 L 280 130" stroke="#00D2FF" stroke-width="2"/>
                     <circle cx="200" cy="110" r="30" stroke="#00D2FF" stroke-width="1" stroke-opacity="0.4"/>
                     <line x1="200" y1="95" x2="200" y2="125" stroke="#00D2FF" stroke-width="1"/>
@@ -909,10 +916,6 @@
                     <text x="260" y="93" fill="#EF4444" font-family="'JetBrains Mono'" font-size="8" text-anchor="middle">CRACK [98.4%]</text>
                     <text x="40" y="195" fill="#64748B" font-family="'JetBrains Mono'" font-size="8">OPTICAL + FLIR THERMAL // MAVLINK TELEMETRY ACTIVE</text>
                   </svg>
-                </div>
-                <div class="project-image-overlay">
-                  <span class="project-code mono">FET-UAV-03</span>
-                  <span class="project-badge" data-i18n="proj3_badge">EMBEDDED VISION + ROBOTICS</span>
                 </div>
               </div>
               <div class="project-card-body">
@@ -966,16 +969,17 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="software" data-card-id="proj-sw-04">
               <div class="project-image-wrap">
-                <img src="/images/project-enterprise-cloud.jpg"
+                <img src="images/project-enterprise-cloud.jpg"
                      alt="Sovereign Enterprise AI, Document & Data Classification Suite"
                      class="project-card-image"
-                     loading="lazy"
+                     width="400"
+                     height="220"
+                     loading="eager"
+                     decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
                   <svg viewBox="0 0 400 220" fill="none" class="fallback-svg">
                     <rect width="400" height="220" fill="#0B101D"/>
-                    <rect x="20" y="20" width="135" height="20" rx="3" fill="rgba(2,132,199,0.1)" stroke="#0284C7" stroke-width="0.8"/>
-                    <text x="28" y="34" fill="#0284C7" font-family="'JetBrains Mono'" font-size="9">FET-SW-04 // PLATFORM</text>
                     <rect x="40" y="70" width="90" height="60" rx="4" fill="#181A20" stroke="#00D2FF" stroke-width="1"/>
                     <text x="85" y="95" fill="#00D2FF" font-family="'JetBrains Mono'" font-size="9" text-anchor="middle">DocuVerify™</text>
                     <text x="85" y="112" fill="#94A3B8" font-family="'JetBrains Mono'" font-size="8" text-anchor="middle">OCR + Schema</text>
@@ -989,10 +993,6 @@
                     <text x="315" y="112" fill="#94A3B8" font-family="'JetBrains Mono'" font-size="8" text-anchor="middle">Read-Only Citations</text>
                     <text x="40" y="195" fill="#64748B" font-family="'JetBrains Mono'" font-size="8">ZERO-TRUST ERP CONNECTORS // NEXT.JS BILINGUAL DASHBOARD</text>
                   </svg>
-                </div>
-                <div class="project-image-overlay">
-                  <span class="project-code mono">FET-SW-04</span>
-                  <span class="project-badge" data-i18n="proj4_badge">PROPRIETARY SOFTWARE PLATFORM</span>
                 </div>
               </div>
               <div class="project-card-body">
@@ -1088,10 +1088,6 @@
               </svg>
             </div>
             <div class="bp-body">
-              <div class="bp-meta">
-                <span class="bp-code mono">FET-ARC-01</span>
-                <span class="bp-badge" data-i18n="bp1_badge">Reference Blueprint // Enterprise Systems</span>
-              </div>
               <h3 class="bp-title" data-i18n="bp1_title">Zero-Trust ERP, Fleet & IoT Middleware Mesh</h3>
               <p class="bp-desc" data-i18n="bp1_desc">Connecting enterprise ERPs, vehicle telemetry, and field hardware to cloud portals under strict JSON-schema validation and AI anomaly detection.</p>
               <div class="bp-stack">
@@ -1158,10 +1154,6 @@
               </svg>
             </div>
             <div class="bp-body">
-              <div class="bp-meta">
-                <span class="bp-code mono">FET-ARC-02</span>
-                <span class="bp-badge" data-i18n="bp2_badge">Reference Blueprint // HITL Orchestration</span>
-              </div>
               <h3 class="bp-title" data-i18n="bp2_title">Smart Traffic, Speed Monitoring & Edge-AI Command System</h3>
               <p class="bp-desc" data-i18n="bp2_desc">Real-time radar/camera speed monitoring, ANPR vehicle classification, and automated incident ticketing with human operator verification.</p>
               <div class="bp-stack">
@@ -1228,10 +1220,6 @@
               </svg>
             </div>
             <div class="bp-body">
-              <div class="bp-meta">
-                <span class="bp-code mono">FET-ARC-03</span>
-                <span class="bp-badge" data-i18n="bp3_badge">Reference Blueprint // Sovereign AI</span>
-              </div>
               <h3 class="bp-title" data-i18n="bp3_title">Enterprise Data Classification & Sovereign RAG Pipeline</h3>
               <p class="bp-desc" data-i18n="bp3_desc">High-speed ingestion, automated data labeling/classification, and private UAE-hosted neural search.</p>
               <div class="bp-stack">
@@ -1297,10 +1285,6 @@
               </svg>
             </div>
             <div class="bp-body">
-              <div class="bp-meta">
-                <span class="bp-code mono">FET-ARC-04</span>
-                <span class="bp-badge" data-i18n="bp4_badge">Reference Blueprint // Full-Stack Platform</span>
-              </div>
               <h3 class="bp-title" data-i18n="bp4_title">Real-Time Executive Telemetry & Multi-Platform Command Portal</h3>
               <p class="bp-desc" data-i18n="bp4_desc">Unified web + mobile command center for live hardware sensors, fleet metrics, and AI-assisted operational KPIs.</p>
               <div class="bp-stack">
