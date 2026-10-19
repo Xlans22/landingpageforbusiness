@@ -8,6 +8,16 @@ if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
 
+// ── GSAP & SCROLLTRIGGER CONFIG ──────────────────────────────
+// Prevent GSAP layout thrashing and address-bar resize jitter on mobile
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+if (typeof ScrollTrigger !== 'undefined') {
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  ScrollTrigger.normalizeScroll(false);
+}
+
 // ── TRANSLATIONS ──────────────────────────────────────────────
 const translations = {
   en: {
@@ -21,9 +31,9 @@ const translations = {
     nav_contact: "Contact",
     nav_search: "Search",
     nav_cta: "Contact",
-    card_more_details: "More Details ↗",
+    card_more_details: "More Details ↗\uFE0E",
     card_close: "Close ×",
-    intro_scroll_indicator: "[ SCROLL TO INITIALIZE ↓ ]",
+    intro_scroll_indicator: "[ SCROLL TO INITIALIZE ↓\uFE0E ]",
 
     // Hero & Telemetry
     hero_badge: "ENTERPRISE SYSTEMS & HITL ORCHESTRATION",
@@ -32,9 +42,9 @@ const translations = {
     hero_headline_p2: "Everything Your Operations Demand.",
     hero_subhead: "From mission-critical enterprise platforms, embedded hardware, and automotive telemetry to high-precision speed monitoring systems and supervised AI—we turn complex engineering challenges into production reality.",
     hero_brief_lead: "Why Industry Leaders Choose Flamingo: Full-stack mastery across hardware, fleet & radar telemetry, structured data, and deterministic AI...",
-    prompt_desktop_brief: "[ Hover for Full Capability Breakdown ↗ ]",
+    prompt_desktop_brief: "[ Hover for Full Capability Breakdown ↗\uFE0E ]",
     prompt_mobile_brief: "[ Tap for Full Capability Breakdown + ]",
-    prompt_desktop_spec: "[ Hover to Inspect Full Technical Spec ↗ ]",
+    prompt_desktop_spec: "[ Hover to Inspect Full Technical Spec ↗\uFE0E ]",
     prompt_mobile_spec: "[ Tap to Read Full Spec + ]",
     card_close_spec: "[ Close Spec × ]",
     hero_adv1_title: "End-to-End Hardware + Software Ownership",
@@ -105,7 +115,7 @@ const translations = {
     tech_subtitle: "Production-hardened frameworks, distributed architectures, and sovereign AI stacks engineered for zero unmonitored execution.",
     tech_label_stack: "PRODUCTION STACK & LIBRARIES",
     tech_label_capabilities: "ENGINEERING SPECIALIZATIONS & RIGOR",
-    tech_cta: "Request Advisory in This Domain →",
+    tech_cta: "Request Advisory in This Domain →\uFE0E",
     tab_a: "Web & Frontend",
     tab_b: "Backend & APIs",
     tab_c: "Mobile & Native",
@@ -193,7 +203,7 @@ const translations = {
     ss_query1: "What is our data retention policy?",
     ss_query2: "Employee onboarding checklist?",
     ss_query3: "Incident response protocol?",
-    ss_click_prompt: "Click a query above to see grounded retrieval →",
+    ss_click_prompt: "Click a query above to see grounded retrieval →\uFE0E",
     ss_lock: "READ-ONLY ADVISORY // DB WRITE PRIVILEGES: 0",
     dv_spec_title1: "Multi-Modal Parsing & Sensor Log Ingestion",
     dv_spec_desc1: "Extracts, classifies, and verifies vehicle telemetry logs, speed enforcement violations, commercial invoices, and legal contracts with sub-second optical recognition.",
@@ -249,7 +259,7 @@ const translations = {
     bp4_spec_t2: "Bilingual Executive Governance",
     bp4_spec_d2: "Seamless right-to-left Arabic and English support designed for ministry and C-level executive boards.",
     bp4_spec_why: "Single shared codebase architecture powering web, iOS, and Android executive clients simultaneously.",
-    bp_cta: "Request Custom Deployment →",
+    bp_cta: "Request Custom Deployment →\uFE0E",
 
     // Section 7: Partners
     nav_partners: "Partners",
@@ -307,7 +317,7 @@ const translations = {
     form_opt5: "FET-ARC-02 HITL Console",
     form_opt6: "FET-ARC-03 Private RAG",
     form_opt7: "FET-ARC-04 Command Portal",
-    form_submit_email: "Initiate Technical Intake → Open Pre-Filled Email",
+    form_submit_email: "Initiate Technical Intake →\uFE0E Open Pre-Filled Email",
     form_submit_wa: "Send Brief via WhatsApp (+971 50 680 2332)",
 
     // Footer
@@ -337,14 +347,14 @@ const translations = {
     nav_contact: "تواصل معنا",
     nav_search: "بحث",
     nav_cta: "تواصل معنا",
-    card_more_details: "التفاصيل الكاملة ↗",
+    card_more_details: "التفاصيل الكاملة ↗\uFE0E",
     card_close: "إغلاق ×",
-    intro_scroll_indicator: "[ مرّر للأسفل للتهيئة ↓ ]",
+    intro_scroll_indicator: "[ مرّر للأسفل للتهيئة ↓\uFE0E ]",
 
     // Interactive Expandable Prompts
-    prompt_desktop_brief: "[ مرّر المؤشر للاطلاع على تفاصيل القدرات الهندسية ↗ ]",
+    prompt_desktop_brief: "[ مرّر المؤشر للاطلاع على تفاصيل القدرات الهندسية ↗\uFE0E ]",
     prompt_mobile_brief: "[ اضغط لعرض تفاصيل القدرات الهندسية + ]",
-    prompt_desktop_spec: "[ مرّر المؤشر لفحص المواصفات التقنية الكاملة ↗ ]",
+    prompt_desktop_spec: "[ مرّر المؤشر لفحص المواصفات التقنية الكاملة ↗\uFE0E ]",
     prompt_mobile_spec: "[ اضغط لقراءة المواصفات الكاملة + ]",
     card_close_spec: "إغلاق المواصفات ×",
 
@@ -427,7 +437,7 @@ const translations = {
     tech_subtitle: "أطر عمل مدعمة للإنتاج، وبنى تحتية موزعة، وحزم ذكاء اصطناعي سيادية مصممة لصفر تنفيذ غير مراقب.",
     tech_label_stack: "حزمة الإنتاج والمكتبات المعتمدة",
     tech_label_capabilities: "التخصصات الهندسية ومعايير الدقة",
-    tech_cta: "طلب استشارة في هذا المجال ←",
+    tech_cta: "طلب استشارة في هذا المجال ←\uFE0E",
     tab_a: "الويب والواجهات",
     tab_b: "الأنظمة الخلفية وAPI",
     tab_c: "تطبيقات الهاتف والأنظمة",
@@ -515,7 +525,7 @@ const translations = {
     ss_query1: "ما هي سياسة الاحتفاظ بالبيانات لدينا؟",
     ss_query2: "قائمة تأهيل الموظفين الجدد؟",
     ss_query3: "بروتوكول الاستجابة للحوادث؟",
-    ss_click_prompt: "انقر على استعلام أعلاه لرؤية الاسترجاع المؤصل ←",
+    ss_click_prompt: "انقر على استعلام أعلاه لرؤية الاسترجاع المؤصل ←\uFE0E",
     ss_lock: "استشاري للقراءة فقط // صلاحيات كتابة قاعدة البيانات: 0",
     dv_spec_title1: "استخراج متعدد الوسائط واستيعاب سجلات الحساسات",
     dv_spec_desc1: "استخراج وتصنيف والتحقق من سجلات القياس عن بُعد للمركبات ومخالفات السرعة والفواتير والعقود القانونية بسرعة فائقة.",
@@ -571,7 +581,7 @@ const translations = {
     bp4_spec_t2: "حوكمة تنفيذية ثنائية اللغة",
     bp4_spec_d2: "دعم متقن لاتجاه الكتابة العربي من اليمين إلى اليسار والإنجليزية مصمم لمجالس الوزارات والإدارات التنفيذية العليا.",
     bp4_spec_why: "بنية كود برمجي موحدة تشغّل في نفس الوقت تطبيقات الويب وiOS وAndroid للقيادات التنفيذية.",
-    bp_cta: "طلب نشر مخصص ←",
+    bp_cta: "طلب نشر مخصص ←\uFE0E",
 
     // Section 7: Partners
     nav_partners: "الشركاء",
@@ -629,7 +639,7 @@ const translations = {
     form_opt5: "FET-ARC-02 HITL Console",
     form_opt6: "FET-ARC-03 Private RAG",
     form_opt7: "FET-ARC-04 Command Portal",
-    form_submit_email: "بدء الاستقبال التقني → فتح بريد مُعبأ مسبقاً",
+    form_submit_email: "بدء الاستقبال التقني →\uFE0E فتح بريد مُعبأ مسبقاً",
     form_submit_wa: "إرسال الملخص عبر واتساب (2332 680 50 971+)",
 
     // Footer
@@ -1065,20 +1075,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── LENIS SMOOTH SCROLL (Ultra-Slow Luxury Motion) ────────────
 function initLenis() {
-  lenis = new Lenis({
-    duration: 1.9,
-    lerp: 0.042,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smoothWheel: true,
-    wheelMultiplier: 0.8,
-  });
+  // Only run Lenis on desktop screens to eliminate mobile scroll jitter and momentum fighting
+  if (window.matchMedia("(min-width: 769px)").matches && typeof Lenis !== 'undefined') {
+    lenis = new Lenis({
+      duration: 1.9,
+      lerp: 0.042,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 0.8,
+    });
 
-  lenis.on('scroll', ScrollTrigger.update);
+    lenis.on('scroll', ScrollTrigger.update);
 
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+  }
 }
 
 // ── TOP SCROLL PROGRESS INDICATOR ────────────────────────────
@@ -1727,7 +1740,7 @@ function initTechnologyTabs() {
         if (descEl) descEl.textContent = isAr ? data.descAr : data.desc;
         if (ctaEl) {
           ctaEl.setAttribute('data-service', data.service);
-          ctaEl.textContent = isAr ? 'طلب استشارة في هذا المجال ←' : 'Request Advisory in This Domain →';
+          ctaEl.textContent = isAr ? 'طلب استشارة في هذا المجال ←\uFE0E' : 'Request Advisory in This Domain →\uFE0E';
         }
 
         // Tech chips
@@ -2521,7 +2534,7 @@ function applyLanguage(lang) {
   document.querySelectorAll('.expandable-card').forEach(card => {
     const btn = card.querySelector('.more-details-btn, .card-trigger-pill');
     if (!btn) return;
-    btn.innerHTML = `<span>${lang === 'ar' ? 'التفاصيل الكاملة' : 'More Details'}</span> <span class="trigger-arrow">↗</span>`;
+    btn.innerHTML = `<span>${lang === 'ar' ? 'التفاصيل الكاملة' : 'More Details'}</span> <span class="trigger-arrow safari-arrow">↗&#xFE0E;</span>`;
   });
 
   // Update modal close button if present
