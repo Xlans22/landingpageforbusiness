@@ -134,13 +134,16 @@ html[dir="rtl"] .scroll-progress-bar {
    INTRO SCROLL RUNWAY & SINGLE-ELEMENT MORPHING NAVBAR
    Zero Duplicate Navbars — Unified Continuous Fixed Element
    ═══════════════════════════════════════════════════════════════ */
+#intro-scroll-spacer,
 .intro-runway {
   height: 250vh;
+  height: 250dvh;
   width: 100%;
   pointer-events: none;
   position: relative;
 }
 
+#morph-navbar,
 .floating-pill-nav {
   position: fixed;
   top: 0;
@@ -148,6 +151,7 @@ html[dir="rtl"] .scroll-progress-bar {
   transform: translateX(-50%);
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   border-radius: 0;
   background: #F8FAFC;
   display: flex;
@@ -1454,6 +1458,29 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
 }
 .dark .spec-modal-body .spec-block-desc {
   color: #94A3B8;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE FIX: GLOBAL SPEC MODAL & MORPH NAVBAR
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #global-spec-modal {
+    width: calc(100vw - 32px) !important; /* 16px margin on each side */
+    max-height: 88dvh !important; /* Use dvh to avoid address bar clipping */
+    padding: 20px 16px !important; /* Reduce massive desktop padding */
+    border-radius: 16px !important;
+  }
+  .spec-modal-inner {
+    padding: 0 !important;
+    max-height: calc(88dvh - 40px) !important;
+  }
+  #morph-navbar {
+    height: 100dvh; /* Ensure mobile intro container uses dvh */
+  }
+  #brand-lockup,
+  .nav-brand-pill {
+    left: 16px !important;
+  }
 }
 
 /* Grid Cards: Clean Fixed-Size Interactive Cards */

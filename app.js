@@ -1108,9 +1108,6 @@ function initIntroAnimation() {
 
   const isRTL = () => false;
 
-  const S_INIT = 1.75;
-  const S_DOCKED = 0.44;
-
   // Exact formulas for horizontal centering with transformOrigin: 'left center':
   const getLogoW = () => navLogo.offsetWidth || (80 * 1113 / 1414);
   const getBrandW = () => {
@@ -1119,199 +1116,217 @@ function initIntroAnimation() {
     return logoW + 26 + wrapW;
   };
 
-  // Stage 1: Bird emblem alone is in the exact dead center of viewport (50vw)
-  const getStage1X = () => (window.innerWidth / 2) - 24 - (S_INIT * (getLogoW() / 2));
+  const mm = gsap.matchMedia();
 
-  // Stage 2: Combined lockup (bird + wordmark) is in the exact dead center of viewport (50vw)
-  const getStage2X = () => (window.innerWidth / 2) - 24 - (S_INIT * (getBrandW() / 2));
+  mm.add({
+    isMobile: "(max-width: 768px)",
+    isDesktop: "(min-width: 769px)"
+  }, (context) => {
+    const { isMobile } = context.conditions;
 
-  // Set initial 0% state: strictly position: fixed; top: 0; left: 50%; transform: translateX(-50%);
-  gsap.set(morphNav, {
-    position: 'fixed',
-    top: 0,
-    left: '50%',
-    xPercent: -50,
-    width: '100vw',
-    height: '100vh',
-    borderRadius: '0px',
-    backgroundColor: '#F8FAFC',
-    borderColor: 'transparent',
-    boxShadow: '0 0 0 0 rgba(0,0,0,0)',
-    backdropFilter: 'blur(0px)',
-    webkitBackdropFilter: 'blur(0px)',
-    pointerEvents: 'none',
-    padding: 0,
-    zIndex: 1000
-  });
-  morphNav.setAttribute('inert', '');
+    const S_INIT = isMobile ? 0.85 : 1.75;
+    const S_DOCKED = isMobile ? 0.35 : 0.44;
+    const leftEdge = isMobile ? 16 : 24;
 
-  // Stage 1: Dead center positioning for bird emblem alone at scroll = 0
-  gsap.set(navBrand, {
-    position: 'absolute',
-    left: 24,
-    top: '50%',
-    yPercent: -50,
-    x: () => getStage1X(),
-    scale: S_INIT,
-    transformOrigin: 'left center'
-  });
+    // Stage 1: Bird emblem alone is in the exact dead center of viewport (50vw)
+    const getStage1X = () => (window.innerWidth / 2) - leftEdge - (S_INIT * (getLogoW() / 2));
 
-  gsap.set(navLogo, {
-    height: 80,
-    clearProps: 'width,scale,transform'
-  });
+    // Stage 2: Combined lockup (bird + wordmark) is in the exact dead center of viewport (50vw)
+    const getStage2X = () => (window.innerWidth / 2) - leftEdge - (S_INIT * (getBrandW() / 2));
 
-  if (wordmarkWrapper) {
-    gsap.set(wordmarkWrapper, {
-      width: 318,
-      opacity: 1,
-      marginLeft: 26,
-      marginRight: 0,
-      overflow: 'hidden',
-      pointerEvents: 'none'
+    // Set initial 0% state: strictly position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+    gsap.set(morphNav, {
+      position: 'fixed',
+      top: 0,
+      left: '50%',
+      xPercent: -50,
+      width: '100vw',
+      height: '100dvh',
+      borderRadius: '0px',
+      backgroundColor: '#F8FAFC',
+      borderColor: 'transparent',
+      boxShadow: '0 0 0 0 rgba(0,0,0,0)',
+      backdropFilter: 'blur(0px)',
+      webkitBackdropFilter: 'blur(0px)',
+      pointerEvents: 'none',
+      padding: 0,
+      zIndex: 1000
     });
-  }
+    morphNav.setAttribute('inert', '');
 
-  if (navWordmark) {
-    gsap.set(navWordmark, {
-      fontSize: '2.8rem',
-      fontWeight: 800,
-      lineHeight: 1,
-      color: '#0B1528'
+    // Stage 1: Dead center positioning for bird emblem alone at scroll = 0
+    gsap.set(navBrand, {
+      position: 'absolute',
+      left: leftEdge,
+      top: '50%',
+      yPercent: -50,
+      x: () => getStage1X(),
+      scale: S_INIT,
+      transformOrigin: 'left center'
     });
-  }
 
-  const wmChars = navWordmark ? navWordmark.querySelectorAll('.char, .wm-letter') : [];
-  if (wmChars.length) {
-    gsap.set(wmChars, {
-      yPercent: 110,
-      opacity: 0,
-      display: 'inline-block'
+    gsap.set(navLogo, {
+      height: 80,
+      clearProps: 'width,scale,transform'
     });
-  }
 
-  if (navControlsWrapper) {
-    gsap.set(navControlsWrapper, {
-      opacity: 0,
-      y: 6,
-      pointerEvents: 'none'
-    });
-  }
+    if (wordmarkWrapper) {
+      gsap.set(wordmarkWrapper, {
+        width: 318,
+        opacity: 1,
+        marginLeft: 26,
+        marginRight: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none'
+      });
+    }
 
-  if (navLinks) {
-    gsap.set(navLinks, { opacity: 1 });
-  }
-  if (navActions) {
-    gsap.set(navActions, { opacity: 1 });
-  }
+    if (navWordmark) {
+      gsap.set(navWordmark, {
+        fontSize: '2.8rem',
+        fontWeight: 800,
+        lineHeight: 1,
+        color: '#0B1528'
+      });
+    }
 
-  if (scrollIndicator) {
-    gsap.set(scrollIndicator, { opacity: 1, y: 0 });
-  }
+    const wmChars = navWordmark ? navWordmark.querySelectorAll('.char, .wm-letter') : [];
+    if (wmChars.length) {
+      gsap.set(wmChars, {
+        yPercent: 110,
+        opacity: 0,
+        display: 'inline-block'
+      });
+    }
 
-  // ── SCROLL-TRIGGERED TIMELINE: 3-STAGE CHOREOGRAPHY DRIVEN BY USER SCROLL ──
-  const introTL = gsap.timeline({
-    scrollTrigger: {
-      id: 'introTrigger',
-      trigger: introTrigger,
-      start: 'top top',
-      end: '+=250%',
-      scrub: 0.6,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const p = self.progress;
-        if (p >= 0.75) {
-          morphNav.classList.add('is-docked-pill');
-        } else {
-          morphNav.classList.remove('is-docked-pill');
-        }
-        if (p >= 0.88) {
-          morphNav.style.pointerEvents = 'auto';
-          morphNav.removeAttribute('inert');
-          morphNav.classList.add('docked');
-        } else {
-          morphNav.style.pointerEvents = 'none';
-          morphNav.setAttribute('inert', '');
-          morphNav.classList.remove('docked');
+    if (navControlsWrapper) {
+      gsap.set(navControlsWrapper, {
+        opacity: 0,
+        y: 6,
+        pointerEvents: 'none'
+      });
+    }
+
+    if (navLinks) {
+      gsap.set(navLinks, { opacity: 1 });
+    }
+    if (navActions) {
+      gsap.set(navActions, { opacity: 1 });
+    }
+
+    if (scrollIndicator) {
+      gsap.set(scrollIndicator, { opacity: 1, y: 0 });
+    }
+
+    // ── SCROLL-TRIGGERED TIMELINE: 3-STAGE CHOREOGRAPHY DRIVEN BY USER SCROLL ──
+    const introTL = gsap.timeline({
+      scrollTrigger: {
+        id: 'introTrigger',
+        trigger: introTrigger,
+        start: 'top top',
+        end: '+=250%',
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          if (p >= 0.75) {
+            morphNav.classList.add('is-docked-pill');
+          } else {
+            morphNav.classList.remove('is-docked-pill');
+          }
+          if (p >= 0.88) {
+            morphNav.style.pointerEvents = 'auto';
+            morphNav.removeAttribute('inert');
+            morphNav.classList.add('docked');
+          } else {
+            morphNav.style.pointerEvents = 'none';
+            morphNav.setAttribute('inert', '');
+            morphNav.classList.remove('docked');
+          }
         }
       }
+    });
+
+    introST = introTL.scrollTrigger;
+
+    // 1. Scroll indicator fades out promptly as user begins scrolling
+    if (scrollIndicator) {
+      introTL.to(scrollIndicator, {
+        opacity: 0,
+        y: 16,
+        duration: 0.08,
+        ease: 'power2.in'
+      }, 0);
+    }
+
+    // 2. Stage 1 -> Stage 2: Logo shifts to the left a little while scrolling down (making room for wordmark)
+    introTL.fromTo(navBrand,
+      { x: () => getStage1X(), scale: S_INIT, left: leftEdge },
+      { x: () => getStage2X(), scale: S_INIT, left: leftEdge, duration: 0.22, ease: 'power2.out' },
+      0
+    );
+
+    // 3. Stage 2: Word appears letter by letter smoothly with animation beside the logo
+    if (wmChars.length) {
+      introTL.fromTo(wmChars,
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, stagger: 0.025, duration: 0.20, ease: 'power2.out' },
+        0.10
+      );
+    }
+
+    // 4. Stage 3: After that they both as a whole minimize in size and move to their right place in the navbar
+    introTL.to(navBrand, {
+      x: 0,
+      scale: S_DOCKED,
+      left: leftEdge,
+      duration: 0.44,
+      ease: 'power2.inOut'
+    }, 0.48);
+
+    // 5. Navbar shrinks from full-screen to 64px floating top pill
+    introTL.to(morphNav, {
+      top: 16,
+      width: () => `${Math.min(window.innerWidth * 0.95, 1240)}px`,
+      height: 64,
+      borderRadius: 9999,
+      backgroundColor: '#F8FAFC',
+      borderColor: '#E2E8F0',
+      boxShadow: 'none',
+      padding: 0,
+      duration: 0.44,
+      ease: 'power2.inOut'
+    }, 0.48);
+
+    // 6. Nav controls (links and action buttons) fade in towards the end of the glide
+    if (navControlsWrapper) {
+      introTL.to(navControlsWrapper, {
+        opacity: 1,
+        y: 0,
+        pointerEvents: 'auto',
+        duration: 0.20,
+        ease: 'power2.out'
+      }, 0.72);
     }
   });
 
-  introST = introTL.scrollTrigger;
-
-  // 1. Scroll indicator fades out promptly as user begins scrolling
-  if (scrollIndicator) {
-    introTL.to(scrollIndicator, {
-      opacity: 0,
-      y: 16,
-      duration: 0.08,
-      ease: 'power2.in'
-    }, 0);
-  }
-
-  // 2. Stage 1 -> Stage 2: Logo shifts to the left a little while scrolling down (making room for wordmark)
-  introTL.fromTo(navBrand,
-    { x: () => getStage1X(), scale: S_INIT },
-    { x: () => getStage2X(), scale: S_INIT, duration: 0.22, ease: 'power2.out' },
-    0
-  );
-
-  // 3. Stage 2: Word appears letter by letter smoothly with animation beside the logo
-  if (wmChars.length) {
-    introTL.fromTo(wmChars,
-      { yPercent: 110, opacity: 0 },
-      { yPercent: 0, opacity: 1, stagger: 0.025, duration: 0.20, ease: 'power2.out' },
-      0.10
-    );
-  }
-
-  // 4. Stage 3: After that they both as a whole minimize in size and move to their right place in the navbar
-  introTL.to(navBrand, {
-    x: 0,
-    scale: S_DOCKED,
-    duration: 0.44,
-    ease: 'power2.inOut'
-  }, 0.48);
-
-  // 5. Navbar shrinks from full-screen to 64px floating top pill
-  introTL.to(morphNav, {
-    top: 16,
-    width: () => `${Math.min(window.innerWidth * 0.95, 1240)}px`,
-    height: 64,
-    borderRadius: 9999,
-    backgroundColor: '#F8FAFC',
-    borderColor: '#E2E8F0',
-    boxShadow: 'none',
-    padding: 0,
-    duration: 0.44,
-    ease: 'power2.inOut'
-  }, 0.48);
-
-  // 6. Nav controls (links and action buttons) fade in towards the end of the glide
-  if (navControlsWrapper) {
-    introTL.to(navControlsWrapper, {
-      opacity: 1,
-      y: 0,
-      pointerEvents: 'auto',
-      duration: 0.20,
-      ease: 'power2.out'
-    }, 0.72);
-  }
-
   // Refresh positions when logo loads and on window resize
+  const getActiveScaleInit = () => (window.innerWidth <= 768 ? 0.85 : 1.75);
+  const getActiveLeftEdge = () => (window.innerWidth <= 768 ? 16 : 24);
+  const getActiveStage1X = () => (window.innerWidth / 2) - getActiveLeftEdge() - (getActiveScaleInit() * (getLogoW() / 2));
+
   if (navLogo) {
     navLogo.addEventListener('load', () => {
       ScrollTrigger.refresh();
       if (introST && introST.progress === 0) {
-        gsap.set(navBrand, { x: getStage1X(), scale: S_INIT });
+        gsap.set(navBrand, { x: getActiveStage1X(), scale: getActiveScaleInit(), left: getActiveLeftEdge() });
       }
     });
   }
 
   window.addEventListener('resize', () => {
     if (introST && introST.progress === 0) {
-      gsap.set(navBrand, { x: getStage1X(), scale: S_INIT });
+      gsap.set(navBrand, { x: getActiveStage1X(), scale: getActiveScaleInit(), left: getActiveLeftEdge() });
     }
   });
 

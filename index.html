@@ -51,7 +51,7 @@
   <!-- ═══════════════════════════════════════════════════════════════
        INTRO SCROLL SPACER (250vh invisible scroll driver)
   ═══════════════════════════════════════════════════════════════ -->
-  <div id="intro-scroll-spacer" class="intro-runway" style="height: 250vh; width: 100%; pointer-events: none;" aria-hidden="true"></div>
+  <div id="intro-scroll-spacer" class="intro-runway" style="height: 250dvh; width: 100%; pointer-events: none;" aria-hidden="true"></div>
 
   <!-- ═══════════════════════════════════════════════════════════════
        UNIFIED INTRO-TO-FLOATING-PILL NAVBAR (Single Continuous Element)
@@ -72,9 +72,12 @@
           var b = document.getElementById('brand-lockup');
           var l = document.getElementById('brand-emblem') || document.getElementById('nav-logo');
           if (b && l) {
+            var isMobile = window.innerWidth <= 768;
+            var s = isMobile ? 0.85 : 1.75;
+            var left = isMobile ? 16 : 24;
             var w = l.offsetWidth || 63;
-            var x = (window.innerWidth / 2) - 24 - (1.75 * (w / 2));
-            b.style.transform = 'translateY(-50%) translate3d(' + x + 'px, 0, 0) scale(1.75)';
+            var x = (window.innerWidth / 2) - left - (s * (w / 2));
+            b.style.transform = 'translateY(-50%) translate3d(' + x + 'px, 0, 0) scale(' + s + ')';
             b.style.transformOrigin = 'left center';
           }
         })();
