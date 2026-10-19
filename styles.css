@@ -131,6 +131,13 @@ html[dir="rtl"] .scroll-progress-bar {
   background: linear-gradient(270deg, var(--cobalt) 0%, var(--cyan) 100%);
 }
 
+/* ── MAIN CONTENT WRAPPER ─────────────────────────────────── */
+.main-content {
+  width: 100%;
+  position: relative;
+  overflow: visible;
+}
+
 /* ── SECTION BASE ──────────────────────────────────────────── */
 .section {
   padding: var(--section-pad) 0;
@@ -3337,11 +3344,114 @@ html[dir="rtl"] .form-select {
 }
 
 @media (max-width: 768px) {
+  /* Final Section: Technical Intake & Abu Dhabi HQ ("Build Resilient, Compliant Systems") */
+  #contact,
+  .contact-section {
+    padding: 64px 20px !important;
+    overflow-x: hidden !important;
+  }
+
+  .contact-section .container {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .contact-section .editorial-header {
+    margin-bottom: 32px !important;
+  }
+
+  .contact-section .editorial-heading {
+    font-size: 2.25rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 16px !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .contact-section .heading-part1,
+  .contact-section .heading-part2 {
+    display: block !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .contact-section .editorial-desc {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    max-width: 100% !important;
+    margin-bottom: 20px !important;
+  }
+
+  .contact-section .editorial-divider {
+    margin-top: 16px !important;
+  }
+
+  .contact-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+    width: 100% !important;
+  }
+
+  .contact-left,
+  .contact-right {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hq-card {
+    margin-bottom: 20px !important;
+  }
+
+  .hq-image {
+    height: 200px !important;
+  }
+
+  .direct-contacts {
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .contact-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .intake-form {
+    padding: 24px 16px !important;
+    width: 100% !important;
+  }
+
+  .form-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .form-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .form-actions .btn {
+    width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    padding: 14px 16px !important;
+    font-size: 0.85rem !important;
+  }
+
   .site-footer {
     flex-direction: column;
     text-align: center;
     gap: 16px;
     padding: 24px 5%;
+    position: relative;
+    z-index: 10;
+    width: 100%;
   }
 
   .site-footer-right {
