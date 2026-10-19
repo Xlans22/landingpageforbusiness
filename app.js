@@ -321,6 +321,10 @@ const translations = {
     footer_phone_label: "Phone",
     footer_email_label: "Email",
     footer_rights: "All rights reserved.",
+    site_footer_copy: "© 2026 Flamingo Emerging Technologies. Engineered for strict data sovereignty.",
+    footer_privacy: "Privacy Policy",
+    footer_terms: "Terms of Service",
+    footer_security: "Security",
   },
   ar: {
     // Floating Pill Navbar & Search
@@ -639,6 +643,10 @@ const translations = {
     footer_phone_label: "الهاتف",
     footer_email_label: "البريد الإلكتروني",
     footer_rights: "جميع الحقوق محفوظة.",
+    site_footer_copy: "© 2026 فلامنجو للتقنيات الناشئة. صُممت لسيادة صارمة على البيانات.",
+    footer_privacy: "سياسة الخصوصية",
+    footer_terms: "شروط الخدمة",
+    footer_security: "الأمان",
   }
 };
 
@@ -1118,15 +1126,181 @@ function initIntroAnimation() {
 
   const mm = gsap.matchMedia();
 
-  mm.add({
-    isMobile: "(max-width: 768px)",
-    isDesktop: "(min-width: 769px)"
-  }, (context) => {
-    const { isMobile } = context.conditions;
+  // ── MOBILE: INSTANT WORD REVEAL, NO-LAG CHOREOGRAPHY (max-width: 768px) ──
+  mm.add("(max-width: 768px)", () => {
+    const brandW = getBrandW();
+    const S_MOBILE_INIT = Math.min(0.85, (window.innerWidth - 32) / brandW);
+    const S_MOBILE_DOCKED = 0.35;
+    const leftEdge = 16;
 
-    const S_INIT = isMobile ? 0.85 : 1.75;
-    const S_DOCKED = isMobile ? 0.35 : 0.44;
-    const leftEdge = isMobile ? 16 : 24;
+    // Center lockup calculation: lockup center = viewport center
+    const getMobileStartX = () => (window.innerWidth / 2) - leftEdge - (S_MOBILE_INIT * (brandW / 2));
+
+    // 1. Initial State: #morph-navbar covers full screen (100dvh)
+    gsap.set(morphNav, {
+      position: 'fixed',
+      top: 0,
+      left: '50%',
+      xPercent: -50,
+      width: '100vw',
+      height: '100dvh',
+      borderRadius: 0,
+      backgroundColor: '#F8FAFC',
+      borderColor: 'transparent',
+      boxShadow: 'none',
+      backdropFilter: 'blur(0px)',
+      webkitBackdropFilter: 'blur(0px)',
+      pointerEvents: 'none',
+      padding: 0,
+      zIndex: 1000
+    });
+    morphNav.setAttribute('inert', '');
+
+    // 2. Initial State: #brand-lockup centered using mobile-safe scale
+    gsap.set(navBrand, {
+      position: 'absolute',
+      left: leftEdge,
+      top: '50%',
+      yPercent: -50,
+      x: () => getMobileStartX(),
+      scale: S_MOBILE_INIT,
+      transformOrigin: 'left center',
+      pointerEvents: 'auto',
+      opacity: 1
+    });
+
+    gsap.set(navLogo, {
+      height: 80,
+      clearProps: 'width,scale,transform'
+    });
+
+    if (wordmarkWrapper) {
+      gsap.set(wordmarkWrapper, {
+        width: 318,
+        opacity: 1,
+        marginLeft: 26,
+        marginRight: 0,
+        overflow: 'hidden',
+        pointerEvents: 'auto'
+      });
+    }
+
+    if (navWordmark) {
+      gsap.set(navWordmark, {
+        fontSize: '2.8rem',
+        fontWeight: 800,
+        lineHeight: 1,
+        color: '#0B1528'
+      });
+    }
+
+    // Set all .char letters to opacity: 1, yPercent: 0 immediately from frame 1
+    const wmChars = navWordmark ? navWordmark.querySelectorAll('.char, .wm-letter') : [];
+    if (wmChars.length) {
+      gsap.set(wmChars, {
+        yPercent: 0,
+        opacity: 1,
+        display: 'inline-block'
+      });
+    }
+
+    if (navControlsWrapper) {
+      gsap.set(navControlsWrapper, {
+        opacity: 0,
+        pointerEvents: 'none'
+      });
+    }
+
+    if (navLinks) {
+      gsap.set(navLinks, { opacity: 1 });
+    }
+    if (navActions) {
+      gsap.set(navActions, { opacity: 1 });
+    }
+
+    if (scrollIndicator) {
+      gsap.set(scrollIndicator, { display: 'flex', opacity: 1, y: 0 });
+    }
+
+    // 3. Scroll Timeline: One continuous tween gliding #brand-lockup from center to docked position
+    const mobileTL = gsap.timeline({
+      scrollTrigger: {
+        id: 'mobileIntroTrigger',
+        trigger: introTrigger,
+        start: 'top top',
+        end: '+=160%',
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          if (p >= 0.75) {
+            morphNav.classList.add('is-docked-pill');
+          } else {
+            morphNav.classList.remove('is-docked-pill');
+          }
+          if (p >= 0.88) {
+            morphNav.style.pointerEvents = 'auto';
+            morphNav.removeAttribute('inert');
+            morphNav.classList.add('docked');
+            if (navControlsWrapper) navControlsWrapper.style.pointerEvents = 'auto';
+          } else {
+            morphNav.style.pointerEvents = 'none';
+            morphNav.setAttribute('inert', '');
+            morphNav.classList.remove('docked');
+            if (navControlsWrapper) navControlsWrapper.style.pointerEvents = 'none';
+          }
+        }
+      }
+    });
+
+    // Scroll indicator fades out during initial scroll
+    if (scrollIndicator) {
+      mobileTL.to(scrollIndicator, {
+        opacity: 0,
+        y: 12,
+        duration: 0.2,
+        ease: 'power1.out'
+      }, 0);
+    }
+
+    // Continuous glide of #brand-lockup from center to docked (left: 16px, scale: 0.35)
+    mobileTL.to(navBrand, {
+      x: 0,
+      scale: S_MOBILE_DOCKED,
+      duration: 1,
+      ease: 'power2.inOut'
+    }, 0);
+
+    // Continuous morph of #morph-navbar into docked pill
+    mobileTL.to(morphNav, {
+      height: 64,
+      top: 16,
+      width: 'calc(100vw - 24px)',
+      borderRadius: 9999,
+      backgroundColor: 'rgba(255, 255, 255, 0.92)',
+      borderColor: '#E2E8F0',
+      boxShadow: '0 12px 32px rgba(9, 20, 38, 0.08)',
+      backdropFilter: 'blur(12px)',
+      webkitBackdropFilter: 'blur(12px)',
+      duration: 1,
+      ease: 'power2.inOut'
+    }, 0);
+
+    // Nav controls fade in smoothly as navbar finishes docking
+    if (navControlsWrapper) {
+      mobileTL.to(navControlsWrapper, {
+        opacity: 1,
+        duration: 0.35,
+        ease: 'power2.out'
+      }, 0.65);
+    }
+  });
+
+  // ── DESKTOP: FULL 3-STAGE INTRO CHOREOGRAPHY DRIVEN BY USER SCROLL ──
+  mm.add("(min-width: 769px)", () => {
+    const S_INIT = 1.75;
+    const S_DOCKED = 0.44;
+    const leftEdge = 24;
 
     // Stage 1: Bird emblem alone is in the exact dead center of viewport (50vw)
     const getStage1X = () => (window.innerWidth / 2) - leftEdge - (S_INIT * (getLogoW() / 2));
@@ -1215,7 +1389,7 @@ function initIntroAnimation() {
     }
 
     if (scrollIndicator) {
-      gsap.set(scrollIndicator, { opacity: 1, y: 0 });
+      gsap.set(scrollIndicator, { opacity: 1, y: 0, display: 'flex' });
     }
 
     // ── SCROLL-TRIGGERED TIMELINE: 3-STAGE CHOREOGRAPHY DRIVEN BY USER SCROLL ──
@@ -1310,23 +1484,21 @@ function initIntroAnimation() {
     }
   });
 
-  // Refresh positions when logo loads and on window resize
-  const getActiveScaleInit = () => (window.innerWidth <= 768 ? 0.85 : 1.75);
-  const getActiveLeftEdge = () => (window.innerWidth <= 768 ? 16 : 24);
-  const getActiveStage1X = () => (window.innerWidth / 2) - getActiveLeftEdge() - (getActiveScaleInit() * (getLogoW() / 2));
-
+  // Refresh positions when logo loads and on window resize (Desktop only)
   if (navLogo) {
     navLogo.addEventListener('load', () => {
       ScrollTrigger.refresh();
-      if (introST && introST.progress === 0) {
-        gsap.set(navBrand, { x: getActiveStage1X(), scale: getActiveScaleInit(), left: getActiveLeftEdge() });
+      if (window.innerWidth > 768 && introST && introST.progress === 0) {
+        const getStage1XDesktop = () => (window.innerWidth / 2) - 24 - (1.75 * (getLogoW() / 2));
+        gsap.set(navBrand, { x: getStage1XDesktop(), scale: 1.75, left: 24 });
       }
     });
   }
 
   window.addEventListener('resize', () => {
-    if (introST && introST.progress === 0) {
-      gsap.set(navBrand, { x: getActiveStage1X(), scale: getActiveScaleInit(), left: getActiveLeftEdge() });
+    if (window.innerWidth > 768 && introST && introST.progress === 0) {
+      const getStage1XDesktop = () => (window.innerWidth / 2) - 24 - (1.75 * (getLogoW() / 2));
+      gsap.set(navBrand, { x: getStage1XDesktop(), scale: 1.75, left: 24 });
     }
   });
 
@@ -1485,7 +1657,22 @@ function initTechnologyTabs() {
   const showcaseContainer = document.getElementById('tech-showcase-container');
   if (!tabsNav || !showcaseContainer) return;
 
+  const tabsWrapper = document.getElementById('tech-tabs-wrapper') || document.querySelector('.tech-tabs-wrapper');
   const tabs = tabsNav.querySelectorAll('.tech-tab');
+
+  // Horizontal mouse-wheel scroll when hovering over the technical stack tabs
+  if (tabsWrapper) {
+    tabsWrapper.addEventListener('wheel', (e) => {
+      if (tabsWrapper.scrollWidth > tabsWrapper.clientWidth) {
+        if (Math.abs(e.deltaY) >= Math.abs(e.deltaX) && e.deltaY !== 0) {
+          e.preventDefault();
+          const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+          const delta = e.deltaMode === 1 ? e.deltaY * 35 : e.deltaY;
+          tabsWrapper.scrollLeft += (isRtl ? -delta : delta);
+        }
+      }
+    }, { passive: false });
+  }
 
   // Render Category Card
   function renderCategory(catKey) {
@@ -1772,6 +1959,7 @@ function initTechnologyTabs() {
       tab.setAttribute('aria-selected', 'true');
       const catKey = tab.dataset.tab;
       renderCategory(catKey);
+      tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
     });
   });
 

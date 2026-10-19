@@ -73,12 +73,18 @@
           var l = document.getElementById('brand-emblem') || document.getElementById('nav-logo');
           if (b && l) {
             var isMobile = window.innerWidth <= 768;
-            var s = isMobile ? 0.85 : 1.75;
-            var left = isMobile ? 16 : 24;
-            var w = l.offsetWidth || 63;
-            var x = (window.innerWidth / 2) - left - (s * (w / 2));
-            b.style.transform = 'translateY(-50%) translate3d(' + x + 'px, 0, 0) scale(' + s + ')';
-            b.style.transformOrigin = 'left center';
+            if (!isMobile) {
+              var w = l.offsetWidth || 63;
+              var x = (window.innerWidth / 2) - 24 - (1.75 * (w / 2));
+              b.style.transform = 'translateY(-50%) translate3d(' + x + 'px, 0, 0) scale(1.75)';
+              b.style.transformOrigin = 'left center';
+            } else {
+              var brandW = 63 + 26 + 318;
+              var sInit = Math.min(0.85, (window.innerWidth - 32) / brandW);
+              var startX = (window.innerWidth / 2) - 16 - (sInit * (brandW / 2));
+              b.style.transform = 'translateY(-50%) translate3d(' + startX + 'px, 0, 0) scale(' + sInit + ')';
+              b.style.transformOrigin = 'left center';
+            }
           }
         })();
       </script>
@@ -735,14 +741,6 @@
           <p class="project-showcase-desc" data-i18n="proj_showcase_desc">In-house commercial radar units, automotive telematics hardware, autonomous vision payloads, and enterprise software suites.</p>
         </div>
 
-        <!-- Four Working Category Filter Tabs -->
-        <div class="project-filter-tabs filter-tabs" id="project-filter-tabs">
-          <button class="filter-tab project-filter-tab active" data-filter="all" data-i18n="proj_filter_all">All Systems</button>
-          <button class="filter-tab project-filter-tab" data-filter="hardware" data-i18n="proj_filter_hardware">Hardware & Embedded</button>
-          <button class="filter-tab project-filter-tab" data-filter="automotive" data-i18n="proj_filter_automotive">Automotive & Radar</button>
-          <button class="filter-tab project-filter-tab" data-filter="software" data-i18n="proj_filter_software">Software & AI</button>
-        </div>
-
         <!-- Four Photo-Backed Project Cards with Floating Spec Overlays -->
         <div class="project-cards-grid">
           <!-- Project 1: FET-HW-01 -->
@@ -1355,8 +1353,8 @@
       </div>
 
       <!-- 12-Category Filter Bar -->
-      <div class="tech-tabs-wrapper no-scrollbar">
-        <div class="tech-tabs-nav no-scrollbar" id="tech-tabs-nav" role="tablist" aria-label="Enterprise Technology Disciplines">
+      <div class="tech-tabs-wrapper" id="tech-tabs-wrapper" data-lenis-prevent>
+        <div class="tech-tabs-nav" id="tech-tabs-nav" role="tablist" aria-label="Enterprise Technology Disciplines">
           <button class="tech-tab active" data-tab="cat-a" role="tab" aria-selected="true"><svg class="tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg><span class="tab-name" data-i18n="tab_a">Web & Frontend</span></button>
           <button class="tech-tab" data-tab="cat-b" role="tab" aria-selected="false"><svg class="tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg><span class="tab-name" data-i18n="tab_b">Backend & APIs</span></button>
           <button class="tech-tab" data-tab="cat-c" role="tab" aria-selected="false"><svg class="tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg><span class="tab-name" data-i18n="tab_c">Mobile & Native</span></button>
@@ -1960,6 +1958,20 @@
       <div class="footer-bottom">
         <span class="mono footer-copy">© <span id="year"></span> Flamingo Emerging Technologies L.L.C - S.P.C. <span data-i18n="footer_rights">All rights reserved.</span></span>
       </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MINIMAL ENTERPRISE FOOTER (Privacy & Legal)
+  ═══════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="site-footer-left" data-i18n="site_footer_copy">
+      &copy; 2026 Flamingo Emerging Technologies. Engineered for strict data sovereignty.
+    </div>
+    <div class="site-footer-right">
+      <a href="#" class="site-footer-link" data-i18n="footer_privacy">Privacy Policy</a>
+      <a href="#" class="site-footer-link" data-i18n="footer_terms">Terms of Service</a>
+      <a href="#" class="site-footer-link" data-i18n="footer_security">Security</a>
     </div>
   </footer>
 

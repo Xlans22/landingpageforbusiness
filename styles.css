@@ -1461,25 +1461,154 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOBILE RESPONSIVE FIX: GLOBAL SPEC MODAL & MORPH NAVBAR
+   MOBILE RESPONSIVE OVERRIDE: INTRO CHOREOGRAPHY & COMPACT UI
+   (Strictly max-width: 768px ONLY — Desktop remains untouched)
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  #global-spec-modal {
-    width: calc(100vw - 32px) !important; /* 16px margin on each side */
-    max-height: 88dvh !important; /* Use dvh to avoid address bar clipping */
-    padding: 20px 16px !important; /* Reduce massive desktop padding */
-    border-radius: 16px !important;
+  /* 1. Mobile Intro Scroll Runway & Indicator */
+  #intro-scroll-spacer,
+  .intro-runway {
+    height: 180dvh !important;
+    width: 100% !important;
+    pointer-events: none !important;
+    position: relative !important;
+    display: block !important;
   }
-  .spec-modal-inner {
+
+  #intro-scroll-indicator,
+  .intro-scroll-indicator {
+    display: flex !important;
+    position: absolute !important;
+    bottom: 8dvh !important;
+    left: 50% !important;
+    transform: translateX(-50%) scale(0.9) !important;
+    pointer-events: none !important;
+    z-index: 10 !important;
+  }
+
+  .intro-scroll-indicator .mono {
+    font-size: 10px !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  /* 2. Mobile Navbar Compactness */
+  #morph-navbar.is-docked-pill,
+  .floating-pill-nav.docked {
+    height: 64px !important;
+    top: 16px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 24px) !important;
+    border-radius: 9999px !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 12px 32px rgba(9, 20, 38, 0.08) !important;
+    pointer-events: auto !important;
+    z-index: 1000 !important;
     padding: 0 !important;
-    max-height: calc(88dvh - 40px) !important;
   }
-  #morph-navbar {
-    height: 100dvh; /* Ensure mobile intro container uses dvh */
+
+  .pill-nav-inner {
+    padding: 0 12px !important;
+    width: 100% !important;
+    height: 100% !important;
   }
+
+  /* 3. Brand Lockup: Left anchored, letters instantly visible */
   #brand-lockup,
   .nav-brand-pill {
+    position: absolute !important;
     left: 16px !important;
+    top: 50% !important;
+    transform-origin: left center !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    display: inline-flex !important;
+    margin: 0 !important;
+  }
+
+  .nav-wordmark .char {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  #wordmark-wrapper,
+  .wordmark-wrapper {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+  }
+
+  /* 4. Nav Controls: Compact padding and gap to prevent overflow */
+  #nav-controls-wrapper,
+  .nav-controls-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    max-width: calc(100% - 130px) !important;
+    margin-left: auto !important;
+    padding: 0 !important;
+  }
+
+  .nav-actions-pill {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .lang-toggle-pill {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+  }
+
+  .mobile-menu-btn {
+    width: 38px !important;
+    height: 38px !important;
+    padding: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* 5. Perfectly Centered Expanded Modal on Mobile */
+  #global-spec-modal {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) scale(1) translateZ(0) !important;
+    width: calc(100vw - 24px) !important; 
+    max-height: 85dvh !important;
+    padding: 20px 16px !important;
+    margin: 0 !important;
+    border-radius: 16px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    z-index: 10000 !important;
+  }
+
+  body:not(.modal-is-open) #global-spec-modal {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  body.modal-is-open #global-spec-modal {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translate(-50%, -50%) scale(1) translateZ(0) !important;
+  }
+
+  .spec-modal-inner {
+    max-height: calc(85dvh - 40px) !important;
+    padding: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    box-sizing: border-box !important;
   }
 }
 
@@ -1865,10 +1994,44 @@ html[dir="rtl"] .term-title { margin-left: 0; margin-right: auto; }
 }
 
 .tech-tabs-wrapper {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
-  padding-bottom: 10px;
-  margin-bottom: 32px;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  padding-bottom: 14px;
+  margin-bottom: 28px;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: #94A3B8 rgba(226, 232, 240, 0.8);
+}
+
+.tech-tabs-wrapper::-webkit-scrollbar {
+  height: 6px;
+  display: block;
+}
+
+.tech-tabs-wrapper::-webkit-scrollbar-track {
+  background: rgba(226, 232, 240, 0.8);
+  border-radius: 999px;
+  margin: 0 4px;
+}
+
+.tech-tabs-wrapper::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.tech-tabs-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
+}
+
+.tech-tabs-wrapper::-webkit-scrollbar-thumb:active {
+  background: #475569;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -1881,12 +2044,23 @@ html[dir="rtl"] .term-title { margin-left: 0; margin-right: auto; }
 
 .tech-tabs-nav {
   display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow: visible;
   gap: 8px;
+  width: max-content;
   min-width: max-content;
+  flex-shrink: 0;
   padding: 6px;
   background: var(--alabaster);
   border: 1px solid var(--grid-line);
   border-radius: 999px;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.tech-tabs-nav::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .tech-tab {
@@ -1902,6 +2076,7 @@ html[dir="rtl"] .term-title { margin-left: 0; margin-right: auto; }
   cursor: pointer;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .tech-tab .tab-icon {
   width: 16px;
@@ -3109,6 +3284,69 @@ html[dir="rtl"] .form-select {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   MINIMAL ENTERPRISE FOOTER (Privacy & Legal)
+   ═══════════════════════════════════════════════════════════════ */
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #E2E8F0;
+  padding: 32px 5%;
+  background-color: #FFFFFF;
+  font-size: 0.85rem;
+  color: #64748B;
+  line-height: 1.5;
+}
+
+.site-footer-left {
+  color: #64748B;
+}
+
+.site-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.site-footer-link {
+  color: #64748B;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
+
+.site-footer-link:hover {
+  color: #00C8FF;
+}
+
+.site-footer-link:focus-visible {
+  outline: 2px solid #00C8FF;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .site-footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 24px 5%;
+  }
+
+  .site-footer-right {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 24px;
+  }
+
+  .site-footer-link {
+    display: inline-block;
+    padding: 4px 6px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
@@ -3356,7 +3594,7 @@ html[dir="rtl"] .form-select {
 }
 
 .project-showcase-header {
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .project-showcase-title {
