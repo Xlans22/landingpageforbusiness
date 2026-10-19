@@ -1128,13 +1128,35 @@ function initIntroAnimation() {
 
   // ── MOBILE: INSTANT WORD REVEAL, NO-LAG CHOREOGRAPHY (max-width: 768px) ──
   mm.add("(max-width: 768px)", () => {
-    const brandW = getBrandW();
-    const S_MOBILE_INIT = Math.min(0.85, (window.innerWidth - 32) / brandW);
+    if (wordmarkWrapper) {
+      wordmarkWrapper.style.width = 'auto';
+      wordmarkWrapper.style.maxWidth = 'max-content';
+    }
+
+    const S_MOBILE_INIT = 0.85;
     const S_MOBILE_DOCKED = 0.35;
     const leftEdge = 16;
 
-    // Center lockup calculation: lockup center = viewport center
-    const getMobileStartX = () => (window.innerWidth / 2) - leftEdge - (S_MOBILE_INIT * (brandW / 2));
+    // Dynamically calculate exact brand lockup width on mobile (without phantom padding)
+    const getMobileBrandW = () => {
+      if (wordmarkWrapper) {
+        wordmarkWrapper.style.width = 'auto';
+        wordmarkWrapper.style.maxWidth = 'max-content';
+      }
+      const bW = navBrand.offsetWidth;
+      if (bW && bW > 120 && bW < 500) return bW;
+      const logoW = navLogo.offsetWidth || (80 * 1113 / 1414);
+      const textW = navWordmark ? (navWordmark.offsetWidth || 232) : 232;
+      return logoW + 26 + textW;
+    };
+
+    // Exact dead-center calculation for transformOrigin: 'left center':
+    // Rendered center: leftEdge + x + (scale * (brandW / 2)) = window.innerWidth / 2
+    // x = (window.innerWidth / 2) - leftEdge - (scale * (brandW / 2))
+    const getMobileStartX = () => {
+      const brandW = getMobileBrandW();
+      return (window.innerWidth / 2) - leftEdge - (S_MOBILE_INIT * (brandW / 2));
+    };
 
     // 1. Initial State: #morph-navbar covers full screen (100dvh)
     gsap.set(morphNav, {
@@ -1156,7 +1178,7 @@ function initIntroAnimation() {
     });
     morphNav.setAttribute('inert', '');
 
-    // 2. Initial State: #brand-lockup centered using mobile-safe scale
+    // 2. Initial State: #brand-lockup centered using mobile scale (0.85)
     gsap.set(navBrand, {
       position: 'absolute',
       left: leftEdge,
@@ -1176,11 +1198,12 @@ function initIntroAnimation() {
 
     if (wordmarkWrapper) {
       gsap.set(wordmarkWrapper, {
-        width: 318,
+        width: 'auto',
+        maxWidth: 'max-content',
         opacity: 1,
         marginLeft: 26,
         marginRight: 0,
-        overflow: 'hidden',
+        overflow: 'visible',
         pointerEvents: 'auto'
       });
     }

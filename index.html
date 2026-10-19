@@ -79,8 +79,13 @@
               b.style.transform = 'translateY(-50%) translate3d(' + x + 'px, 0, 0) scale(1.75)';
               b.style.transformOrigin = 'left center';
             } else {
-              var brandW = 63 + 26 + 318;
-              var sInit = Math.min(0.85, (window.innerWidth - 32) / brandW);
+              var ww = document.getElementById('wordmark-wrapper');
+              if (ww) { ww.style.width = 'auto'; }
+              var wm = document.getElementById('nav-wordmark');
+              var logoW = l.offsetWidth || 63;
+              var textW = (wm && wm.offsetWidth) ? wm.offsetWidth : 232;
+              var brandW = b.offsetWidth || (logoW + 26 + textW);
+              var sInit = 0.85;
               var startX = (window.innerWidth / 2) - 16 - (sInit * (brandW / 2));
               b.style.transform = 'translateY(-50%) translate3d(' + startX + 'px, 0, 0) scale(' + sInit + ')';
               b.style.transformOrigin = 'left center';

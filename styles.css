@@ -1523,13 +1523,14 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
     height: 100% !important;
   }
 
-  /* 3. Brand Lockup: Left anchored, letters instantly visible */
+  /* 3. Brand Lockup: Left anchored, letters instantly visible, no transform conflict */
   #brand-lockup,
   .nav-brand-pill {
     position: absolute !important;
     left: 16px !important;
     top: 50% !important;
     transform-origin: left center !important;
+    transform: none;
     opacity: 1 !important;
     pointer-events: auto !important;
     display: inline-flex !important;
@@ -1543,8 +1544,11 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
 
   #wordmark-wrapper,
   .wordmark-wrapper {
+    width: auto !important;
+    max-width: max-content !important;
     pointer-events: auto !important;
     opacity: 1 !important;
+    display: inline-flex !important;
   }
 
   /* 4. Nav Controls: Compact padding and gap to prevent overflow */
