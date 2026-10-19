@@ -1474,6 +1474,95 @@ html[lang="ar"] .spec-modal-body .spec-block-title {
   color: #94A3B8;
 }
 
+/* ── ENTERPRISE LEGAL & PRIVACY MODAL ───────────────────────── */
+#legal-modal-overlay {
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+}
+
+#legal-modal-inner {
+  box-shadow: 0 25px 50px -12px rgba(11, 21, 40, 0.35);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+  transform: scale(0.96) translateZ(0);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#legal-modal-overlay.open #legal-modal-inner {
+  transform: scale(1) translateZ(0);
+}
+
+#legal-modal-inner h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0B1528;
+  letter-spacing: -0.025em;
+  padding-right: 32px;
+}
+
+.legal-content h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0B1528;
+  margin: 22px 0 8px 0;
+  letter-spacing: -0.015em;
+}
+
+.legal-content h3:first-child {
+  margin-top: 14px;
+}
+
+.legal-content p {
+  font-size: 0.925rem;
+  line-height: 1.65;
+  color: #475569;
+  margin-bottom: 14px;
+}
+
+#close-legal-btn {
+  transition: color 0.2s ease, transform 0.2s ease;
+  line-height: 1;
+}
+
+#close-legal-btn:hover {
+  color: #0B1528 !important;
+  transform: scale(1.15);
+}
+
+/* Custom scrollbar for legal-modal-inner */
+#legal-modal-inner::-webkit-scrollbar {
+  width: 6px;
+}
+#legal-modal-inner::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 16px 0;
+}
+#legal-modal-inner::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.35);
+  border-radius: 999px;
+}
+#legal-modal-inner::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.65);
+}
+
+/* RTL Support */
+html[lang="ar"] #legal-modal-inner {
+  direction: rtl;
+  text-align: right;
+}
+html[lang="ar"] #close-legal-btn {
+  right: auto !important;
+  left: 24px !important;
+}
+html[lang="ar"] #legal-modal-inner h2 {
+  padding-right: 0;
+  padding-left: 32px;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    MOBILE RESPONSIVE OVERRIDE: INTRO CHOREOGRAPHY & COMPACT UI
    (Strictly max-width: 768px ONLY — Desktop remains untouched)

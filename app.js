@@ -1056,6 +1056,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMarqueeClone();
   initInteractions();
   initExpandableCards();
+  initLegalModal();
   initScrollReveals();
   initCircuitLine();
   preDecodeProjectImages();
@@ -2740,7 +2741,7 @@ function initExpandableCards() {
   // Click anywhere outside modal card box closes modal
   document.addEventListener('click', (e) => {
     if (!document.body.classList.contains('modal-is-open')) return;
-    if (modal && !modal.contains(e.target) && !e.target.closest('.more-details-btn, .card-trigger-pill, .expandable-card')) {
+    if (modal && modal.getAttribute('aria-hidden') !== 'true' && !modal.contains(e.target) && !e.target.closest('.more-details-btn, .card-trigger-pill, .expandable-card, #legal-modal-overlay, #legal-modal-inner, .site-footer-link')) {
       closeSpecModal();
     }
   });
@@ -2755,6 +2756,111 @@ function initExpandableCards() {
   // Expose helpers globally if needed
   window.closeSpecModal = closeSpecModal;
   window.openSpecModal = openSpecModal;
+}
+
+// ── ENTERPRISE LEGAL & PRIVACY MODAL ─────────────────────────
+const legalDocuments = {
+  "Privacy Policy": `
+    <h3>1. Edge-First Data Processing</h3>
+    <p>Flamingo Emerging Technologies utilizes an edge-first telemetry architecture. Primary data processing and AI inference occur strictly on-device, ensuring sensitive operational data never unnecessarily traverses public networks.</p>
+    <h3>2. Telemetry & Sovereign Storage</h3>
+    <p>Where cloud synchronization is required, data is encrypted in transit and at rest using AES-256 protocols. We enforce strict data sovereignty, ensuring your localized data remains within your designated geographic jurisdiction.</p>
+    <h3>3. Zero Unmonitored Execution</h3>
+    <p>We do not use customer telemetry data to train baseline AI models without explicit enterprise opt-in. Our systems are engineered for total transparency and auditability.</p>
+  `,
+  "Terms of Service": `
+    <h3>1. Enterprise Licensing & Usage</h3>
+    <p>Access to Flamingo's proprietary telemetry dashboards and edge AI models is granted via enterprise licensing. Reverse engineering, decompiling, or attempting to extract the underlying neural network weights from deployed edge devices is strictly prohibited.</p>
+    <h3>2. Service Level Agreements (SLA)</h3>
+    <p>Flamingo provides production-hardened frameworks with guaranteed uptime as defined in your specific enterprise contract. Maintenance windows and edge-device firmware over-the-air (OTA) updates are scheduled in coordination with your IT administrators.</p>
+    <h3>3. Liability & Deployment</h3>
+    <p>While our systems are engineered for high-stakes environments, Flamingo software is provided as a telemetry and decision-support tool. Final operational authority remains with the deploying enterprise.</p>
+  `,
+  "Security": `
+    <h3>1. Zero-Trust Architecture</h3>
+    <p>Our distributed architectures operate on a zero-trust model. Every edge node, API request, and telemetry payload requires strict cryptographic authentication before being admitted to the central network.</p>
+    <h3>2. Hardware-Level Security</h3>
+    <p>Flamingo edge deployments utilize secure enclaves and hardware-backed keystores to protect API credentials and AI models from physical tampering or unauthorized extraction.</p>
+    <h3>3. Compliance & Auditing</h3>
+    <p>We actively engineer our stacks to meet and exceed global standards for data protection, including GDPR and SOC 2 Type II architectural requirements. Independent penetration testing is conducted annually.</p>
+  `
+};
+
+function initLegalModal() {
+  const overlay = document.getElementById('legal-modal-overlay');
+  const inner = document.getElementById('legal-modal-inner');
+  const closeBtn = document.getElementById('close-legal-btn');
+  const titleEl = document.getElementById('legal-modal-title');
+  const contentEl = overlay ? overlay.querySelector('.legal-content') : null;
+  const footerLinks = document.querySelectorAll('.site-footer-link');
+
+  if (!overlay || !inner || !closeBtn || !footerLinks.length) return;
+
+  function openLegalModal(docKey, displayTitle) {
+    const content = legalDocuments[docKey] || legalDocuments["Privacy Policy"];
+    if (titleEl) titleEl.textContent = displayTitle || docKey;
+    if (contentEl) contentEl.innerHTML = content;
+
+    overlay.style.display = 'flex';
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+    });
+
+    document.body.classList.add('legal-modal-is-open');
+    if (lenis) lenis.stop();
+    inner.scrollTop = 0;
+    setTimeout(() => closeBtn.focus(), 50);
+  }
+
+  function closeLegalModal() {
+    overlay.style.opacity = '0';
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      document.body.classList.remove('legal-modal-is-open');
+      if (lenis) lenis.start();
+    }, 250);
+  }
+
+  footerLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const i18nKey = link.getAttribute('data-i18n');
+      let docKey = 'Privacy Policy';
+      if (i18nKey === 'footer_terms' || (link.textContent && link.textContent.includes('Terms'))) {
+        docKey = 'Terms of Service';
+      } else if (i18nKey === 'footer_security' || (link.textContent && link.textContent.includes('Security'))) {
+        docKey = 'Security';
+      }
+      openLegalModal(docKey, link.textContent.trim());
+    });
+  });
+
+  closeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    closeLegalModal();
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      closeLegalModal();
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.style.display === 'flex') {
+      closeLegalModal();
+    }
+  });
+
+  overlay.addEventListener('wheel', (e) => {
+    e.stopPropagation();
+  }, { passive: false });
 }
 
 // ── ULTRA-SLOW UPWARD SCROLL REVEALS (y: 85px/95px -> 0px, duration: 2.3s–2.35s) ──
