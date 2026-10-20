@@ -12,7 +12,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="public/flamingo-icon.png" />
+  <link rel="icon" type="image/png" href="public/images/flamingo-icon.png" />
+  <link rel="apple-touch-icon" href="public/images/flamingo-icon.png" />
+  <meta name="theme-color" content="#0B1528" />
+
+  <!-- OpenGraph / Social Share Preview Cards -->
+  <meta property="og:title" content="Flamingo Tech | Enterprise AI, Telemetry & Embedded Systems" />
+  <meta property="og:description" content="Zero-trust architecture, flagship hardware deployments, and custom enterprise engineering." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="public/images/flamingo-icon.png" />
+  <meta property="og:image:secure_url" content="public/images/logo.webp" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1113" />
+  <meta property="og:image:height" content="1414" />
+  <meta property="og:image:alt" content="Flamingo Tech Emblem" />
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Flamingo Tech | Enterprise AI, Telemetry & Embedded Systems" />
+  <meta name="twitter:description" content="Zero-trust architecture, flagship hardware deployments, and custom enterprise engineering." />
+  <meta name="twitter:image" content="public/images/flamingo-icon.png" />
 
   <!-- GSAP + ScrollTrigger + Lenis -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -74,7 +93,7 @@
     <div class="pill-nav-inner" id="pill-nav-inner">
       <!-- Left: Brand Lockup (Emblem + Wordmark FLAMINGO) -->
       <a href="#hero" class="nav-brand-pill" id="brand-lockup" aria-label="Flamingo Emerging Technologies">
-        <img src="public/flamingo-icon.png" alt="FET Emblem" class="nav-pill-logo brand-emblem" id="brand-emblem" width="1113" height="1414" />
+        <img src="public/images/flamingo-icon.png" alt="FET Emblem" class="nav-pill-logo brand-emblem" id="brand-emblem" width="1113" height="1414" loading="eager" />
         <div class="wordmark-wrapper" id="wordmark-wrapper">
           <span class="nav-wordmark" id="nav-wordmark">
             <span class="wm-letter-wrap"><span class="char" data-accent="false">F</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">L</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">A</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">M</span></span><span class="wm-letter-wrap"><span class="char" data-accent="i">I</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">N</span></span><span class="wm-letter-wrap"><span class="char" data-accent="false">G</span></span><span class="wm-letter-wrap wm-letter-o"><span class="char" data-accent="o">O</span></span>
@@ -226,7 +245,7 @@
       <!-- Right Column -->
       <div class="hero-right">
         <div class="hero-image-frame">
-          <img src="public/images/hero-architecture.jpg" alt="Enterprise Architecture" class="hero-image" loading="eager" />
+          <img src="public/images/hero-architecture.webp" alt="Enterprise Architecture" class="hero-image" loading="eager" />
           <div class="hero-clip-border"></div>
         </div>
         <!-- Overlapping Telemetry Console -->
@@ -276,51 +295,51 @@
     <div class="marquee-track-wrapper">
       <div class="marquee-track" id="marquee-track">
         <div class="marquee-item" data-name="Python">
-          <img src="https://cdn.simpleicons.org/python/475569" alt="Python" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/python/475569" alt="Python" loading="lazy" decoding="async" />
           <span>Python</span>
         </div>
         <div class="marquee-item" data-name="Go">
-          <img src="https://cdn.simpleicons.org/go/475569" alt="Go" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/go/475569" alt="Go" loading="lazy" decoding="async" />
           <span>Go</span>
         </div>
         <div class="marquee-item" data-name="TypeScript">
-          <img src="https://cdn.simpleicons.org/typescript/475569" alt="TypeScript" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/typescript/475569" alt="TypeScript" loading="lazy" decoding="async" />
           <span>TypeScript</span>
         </div>
         <div class="marquee-item" data-name="React">
-          <img src="https://cdn.simpleicons.org/react/475569" alt="React" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/react/475569" alt="React" loading="lazy" decoding="async" />
           <span>React</span>
         </div>
         <div class="marquee-item" data-name="Next.js">
-          <img src="https://cdn.simpleicons.org/nextdotjs/475569" alt="Next.js" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/nextdotjs/475569" alt="Next.js" loading="lazy" decoding="async" />
           <span>Next.js</span>
         </div>
         <div class="marquee-item" data-name="Flutter">
-          <img src="https://cdn.simpleicons.org/flutter/475569" alt="Flutter" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/flutter/475569" alt="Flutter" loading="lazy" decoding="async" />
           <span>Flutter</span>
         </div>
         <div class="marquee-item" data-name="PostgreSQL">
-          <img src="https://cdn.simpleicons.org/postgresql/475569" alt="PostgreSQL" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/postgresql/475569" alt="PostgreSQL" loading="lazy" decoding="async" />
           <span>PostgreSQL</span>
         </div>
         <div class="marquee-item" data-name="Apache Kafka">
-          <img src="https://cdn.simpleicons.org/apachekafka/475569" alt="Apache Kafka" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/apachekafka/475569" alt="Apache Kafka" loading="lazy" decoding="async" />
           <span>Kafka</span>
         </div>
         <div class="marquee-item" data-name="Docker">
-          <img src="https://cdn.simpleicons.org/docker/475569" alt="Docker" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/docker/475569" alt="Docker" loading="lazy" decoding="async" />
           <span>Docker</span>
         </div>
         <div class="marquee-item" data-name="Kubernetes">
-          <img src="https://cdn.simpleicons.org/kubernetes/475569" alt="Kubernetes" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/kubernetes/475569" alt="Kubernetes" loading="lazy" decoding="async" />
           <span>Kubernetes</span>
         </div>
         <div class="marquee-item" data-name="Linux">
-          <img src="https://cdn.simpleicons.org/linux/475569" alt="Linux" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/linux/475569" alt="Linux" loading="lazy" decoding="async" />
           <span>Linux</span>
         </div>
         <div class="marquee-item" data-name="OpenTelemetry">
-          <img src="https://cdn.simpleicons.org/opentelemetry/475569" alt="OpenTelemetry" loading="lazy" />
+          <img src="https://cdn.simpleicons.org/opentelemetry/475569" alt="OpenTelemetry" loading="lazy" decoding="async" />
           <span>OpenTelemetry</span>
         </div>
       </div>
@@ -346,7 +365,7 @@
         <div class="card-slot">
           <div class="bento-card expandable-card" data-card-id="cap-hardware">
             <div class="bento-image-header">
-              <img src="public/images/hardware-iot.jpg" alt="Embedded Hardware and Automotive Telemetry" class="bento-cover" loading="lazy" onerror="this.src='public/images/hardware-blades.jpg'" />
+              <img src="public/images/hardware-iot.webp" alt="Embedded Hardware and Automotive Telemetry" class="bento-cover" loading="lazy" decoding="async" onerror="this.src='public/images/hardware-blades.webp'" />
               <div class="bento-overlay">
                 <div class="throughput-bars">
                   <div class="t-bar"><span class="t-label mono">Doppler Radar</span><div class="t-track"><div class="t-fill t-fill-active" style="width:100%"></div></div><span class="t-val mono">ACTIVE</span></div>
@@ -406,7 +425,7 @@
         <div class="card-slot">
           <div class="bento-card expandable-card" data-card-id="cap-software">
             <div class="bento-image-header">
-              <img src="public/images/hardware-blades.jpg" alt="Enterprise Software Infrastructure" class="bento-cover" loading="lazy" />
+              <img src="public/images/hardware-blades.webp" alt="Enterprise Software Infrastructure" class="bento-cover" loading="lazy" decoding="async" />
               <div class="bento-overlay">
                 <div class="throughput-bars">
                   <div class="t-bar"><span class="t-label mono">API Gateway</span><div class="t-track"><div class="t-fill" style="width:94%"></div></div><span class="t-val mono">94%</span></div>
@@ -769,12 +788,12 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="hardware automotive" data-card-id="proj-hw-01">
               <div class="project-image-wrap">
-                <img src="images/project-speed-radar.jpg"
+                <img src="public/images/project-speed-radar.webp"
                      alt="Smart Roadside Speed Monitoring & Edge-ANPR Radar Unit"
                      class="project-card-image"
                      width="400"
                      height="220"
-                     loading="eager"
+                     loading="lazy"
                      decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
@@ -844,12 +863,12 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="automotive hardware" data-card-id="proj-auto-02">
               <div class="project-image-wrap">
-                <img src="images/project-fleet-telemetry.jpg"
+                <img src="public/images/project-fleet-telemetry.webp"
                      alt="Automotive CAN-Bus Telemetry & Fleet Diagnostics Module"
                      class="project-card-image"
                      width="400"
                      height="220"
-                     loading="eager"
+                     loading="lazy"
                      decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
@@ -920,12 +939,12 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="hardware software" data-card-id="proj-uav-03">
               <div class="project-image-wrap">
-                <img src="images/project-edge-vision.jpg"
+                <img src="public/images/project-edge-vision.webp"
                      alt="Autonomous Drone & Industrial Optical Inspection System"
                      class="project-card-image"
                      width="400"
                      height="220"
-                     loading="eager"
+                     loading="lazy"
                      decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
@@ -992,12 +1011,12 @@
           <div class="card-slot project-card-slot">
             <div class="project-card expandable-card dark" data-category="software" data-card-id="proj-sw-04">
               <div class="project-image-wrap">
-                <img src="images/project-enterprise-cloud.jpg"
+                <img src="public/images/project-enterprise-cloud.webp"
                      alt="Sovereign Enterprise AI, Document & Data Classification Suite"
                      class="project-card-image"
                      width="400"
                      height="220"
-                     loading="eager"
+                     loading="lazy"
                      decoding="async"
                      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.add('is-visible');" />
                 <div class="project-image-fallback" aria-hidden="true">
@@ -1081,15 +1100,6 @@
         </h2>
         <p class="editorial-desc" data-i18n="bp_subtitle">Pre-engineered system designs and custom software architectures ready to be tailored and deployed for your organization.</p>
         <div class="editorial-divider"></div>
-      </div>
-
-      <!-- Filter Tabs -->
-      <div class="filter-tabs" id="filter-tabs">
-        <button class="filter-tab active" data-filter="all" data-i18n="bp_filter_all">All Blueprints</button>
-        <button class="filter-tab" data-filter="enterprise" data-i18n="bp_filter_enterprise">Enterprise Systems</button>
-        <button class="filter-tab" data-filter="ai" data-i18n="bp_filter_ai">Supervised AI</button>
-        <button class="filter-tab" data-filter="cloud" data-i18n="bp_filter_cloud">Private Cloud</button>
-        <button class="filter-tab" data-filter="portal" data-i18n="bp_filter_portal">Executive Portals</button>
       </div>
 
       <div class="blueprints-grid" id="blueprints-grid">
@@ -1410,14 +1420,14 @@
               <div class="tech-group-block">
                 <span class="tech-group-label mono" data-i18n="tech_label_stack">PRODUCTION STACK & LIBRARIES</span>
                 <div class="tech-chips-grid" id="tech-chips-grid">
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/react/0284C7" alt="React" loading="lazy" /> React</span>
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/nextdotjs/0284C7" alt="Next.js" loading="lazy" /> Next.js</span>
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/typescript/0284C7" alt="TypeScript" loading="lazy" /> TypeScript</span>
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/tailwindcss/0284C7" alt="Tailwind" loading="lazy" /> Tailwind CSS</span>
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/vite/0284C7" alt="Vite" loading="lazy" /> Vite</span>
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/webpack/0284C7" alt="Webpack" loading="lazy" /> Webpack</span>
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/pwa/0284C7" alt="PWA" loading="lazy" /> PWA Standards</span>
-                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/webcomponents/0284C7" alt="Web Components" loading="lazy" /> Web Components</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/react/0284C7" alt="React" loading="lazy" decoding="async" /> React</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/nextdotjs/0284C7" alt="Next.js" loading="lazy" decoding="async" /> Next.js</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/typescript/0284C7" alt="TypeScript" loading="lazy" decoding="async" /> TypeScript</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/tailwindcss/0284C7" alt="Tailwind" loading="lazy" decoding="async" /> Tailwind CSS</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/vite/0284C7" alt="Vite" loading="lazy" decoding="async" /> Vite</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/webpack/0284C7" alt="Webpack" loading="lazy" decoding="async" /> Webpack</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/pwa/0284C7" alt="PWA" loading="lazy" decoding="async" /> PWA Standards</span>
+                  <span class="tech-chip"><img src="https://cdn.simpleicons.org/webcomponents/0284C7" alt="Web Components" loading="lazy" decoding="async" /> Web Components</span>
                 </div>
               </div>
 
@@ -1859,7 +1869,7 @@
         <div class="contact-left">
           <div class="hq-card">
             <div class="hq-image-frame">
-              <img src="public/images/abudhabi-hq.jpg" alt="Abu Dhabi Headquarters" class="hq-image" loading="lazy" />
+              <img src="public/images/abudhabi-hq.webp" alt="Abu Dhabi Headquarters" class="hq-image" loading="lazy" decoding="async" />
               <div class="hq-overlay-badge mono" data-i18n="hq_badge">Mussafah M-11, Emirate of Abu Dhabi, UAE</div>
             </div>
           </div>
@@ -1937,7 +1947,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="footer-lockup">
-            <img src="public/flamingo-icon.png" alt="Flamingo" class="footer-logo" />
+            <img src="public/images/flamingo-icon.png" alt="Flamingo" class="footer-logo" loading="lazy" decoding="async" />
             <div class="footer-wordmark">
               <span class="fw-primary">FLAMINGO</span>
               <span class="fw-sub">EMERGING TECHNOLOGIES</span>

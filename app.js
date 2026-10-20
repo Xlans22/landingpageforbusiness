@@ -1075,22 +1075,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── LENIS SMOOTH SCROLL (Ultra-Slow Luxury Motion) ────────────
 function initLenis() {
+  document.body.style.overflow = '';
   // Only run Lenis on desktop screens to eliminate mobile scroll jitter and momentum fighting
   if (window.matchMedia("(min-width: 769px)").matches && typeof Lenis !== 'undefined') {
-    lenis = new Lenis({
-      duration: 1.9,
-      lerp: 0.042,
+    window.lenis = new Lenis({
+      duration: 1.4,
+      lerp: 0.075,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 0.8,
+      wheelMultiplier: 1.0,
     });
+    lenis = window.lenis;
 
-    lenis.on('scroll', ScrollTrigger.update);
+    window.lenis.on('scroll', ScrollTrigger.update);
 
     gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
+      window.lenis.raf(time * 1000);
     });
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(1000, 16);
   }
 }
 
@@ -1261,6 +1263,13 @@ function initIntroAnimation() {
 
     // 3. Scroll Timeline: One continuous tween gliding #brand-lockup from center to docked position
     const mobileTL = gsap.timeline({
+      onComplete: () => {
+        if (window.lenis) {
+          window.lenis.start();
+        }
+        document.body.style.overflow = ''; 
+        ScrollTrigger.refresh(); 
+      },
       scrollTrigger: {
         id: 'mobileIntroTrigger',
         trigger: introTrigger,
@@ -1436,6 +1445,13 @@ function initIntroAnimation() {
 
     // ── SCROLL-TRIGGERED TIMELINE: 3-STAGE CHOREOGRAPHY DRIVEN BY USER SCROLL ──
     const introTL = gsap.timeline({
+      onComplete: () => {
+        if (window.lenis) {
+          window.lenis.start();
+        }
+        document.body.style.overflow = ''; 
+        ScrollTrigger.refresh(); 
+      },
       scrollTrigger: {
         id: 'introTrigger',
         trigger: introTrigger,
@@ -1443,6 +1459,8 @@ function initIntroAnimation() {
         end: '+=250%',
         scrub: 0.6,
         invalidateOnRefresh: true,
+        anticipatePin: 1,
+        fastScrollEnd: true,
         onUpdate: (self) => {
           const p = self.progress;
           if (p >= 0.75) {
@@ -2340,27 +2358,6 @@ function initInteractions() {
     });
   });
 
-  // Blueprint Filter Tabs
-  const blueprintFilterTabs = document.querySelectorAll('#filter-tabs .filter-tab');
-  const bpCards = document.querySelectorAll('.bp-card');
-
-  blueprintFilterTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      blueprintFilterTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const filter = tab.dataset.filter;
-      bpCards.forEach(card => {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-      if (window.ScrollTrigger) {
-        ScrollTrigger.refresh();
-      }
-    });
-  });
 
   // Project Showcase Filter Tabs
   const projectFilterTabs = document.querySelectorAll('#project-filter-tabs .project-filter-tab');
@@ -2456,38 +2453,117 @@ function initInteractions() {
     });
   }
 
+  // Intake Form Validation & Real-time Border Clear
+  const formFieldIds = ['form-name', 'form-email', 'form-brief', 'form-org', 'form-phone'];
+  formFieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', () => {
+        el.classList.remove('input-invalid');
+        el.classList.remove('shake-input');
+      });
+    }
+  });
+
+  function validateIntakeForm() {
+    const nameInput = document.getElementById('form-name');
+    const emailInput = document.getElementById('form-email');
+    const briefInput = document.getElementById('form-brief');
+
+    const nameVal = nameInput ? nameInput.value.trim() : '';
+    const emailVal = emailInput ? emailInput.value.trim() : '';
+    const briefVal = briefInput ? briefInput.value.trim() : '';
+
+    let isValid = true;
+    let firstInvalid = null;
+
+    function markInvalid(inputEl) {
+      if (!inputEl) return;
+      isValid = false;
+      inputEl.classList.add('input-invalid');
+      inputEl.classList.remove('shake-input');
+      void inputEl.offsetWidth; // Force reflow to retrigger animation
+      inputEl.classList.add('shake-input');
+      inputEl.addEventListener('animationend', () => {
+        inputEl.classList.remove('shake-input');
+      }, { once: true });
+      if (!firstInvalid) firstInvalid = inputEl;
+    }
+
+    if (!nameVal) {
+      markInvalid(nameInput);
+    }
+    if (!emailVal || !emailVal.includes('@')) {
+      markInvalid(emailInput);
+    }
+    if (!briefVal) {
+      markInvalid(briefInput);
+    }
+
+    if (!isValid && firstInvalid) {
+      firstInvalid.focus();
+    }
+
+    return isValid;
+  }
+
   // Submit Email
   const submitEmail = document.getElementById('submit-email');
   if (submitEmail) {
-    submitEmail.addEventListener('click', () => {
-      const name = document.getElementById('form-name').value;
-      const org = document.getElementById('form-org').value;
-      const email = document.getElementById('form-email').value;
-      const phone = document.getElementById('form-phone').value;
-      const service = document.getElementById('form-service').value;
-      const brief = document.getElementById('form-brief').value;
+    submitEmail.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!validateIntakeForm()) {
+        return;
+      }
+      const nameValue = document.getElementById('form-name') ? document.getElementById('form-name').value.trim() : '';
+      const orgValue = document.getElementById('form-org') ? document.getElementById('form-org').value.trim() : '';
+      const emailValue = document.getElementById('form-email') ? document.getElementById('form-email').value.trim() : '';
+      const phoneValue = document.getElementById('form-phone') ? document.getElementById('form-phone').value.trim() : '';
+      const architectureValue = document.getElementById('form-service') ? document.getElementById('form-service').value : '';
+      const briefValue = document.getElementById('form-brief') ? document.getElementById('form-brief').value.trim() : '';
 
-      const subject = encodeURIComponent(`Technical Intake Request — ${service}`);
-      const body = encodeURIComponent(
-        `Full Name: ${name}\nOrganization: ${org}\nWork Email: ${email}\nPhone: ${phone}\nService of Interest: ${service}\n\nProject Brief:\n${brief}`
-      );
-      window.open(`mailto:info@flamingo-technology.com?subject=${subject}&body=${body}`, '_self');
+      const destinationEmail = "contact@flamingo-tech.com"; 
+
+      const subject = encodeURIComponent(`New Enterprise Inquiry: ${architectureValue} - ${nameValue}`);
+
+      const rawBody = `New Technical Intake Form Submission:\n\n` +
+                      `Full Name: ${nameValue}\n` +
+                      `Organization: ${orgValue}\n` +
+                      `Work Email: ${emailValue}\n` +
+                      `Phone Number: ${phoneValue}\n\n` +
+                      `Service of Interest: ${architectureValue}\n\n` +
+                      `Project Brief:\n${briefValue}`;
+
+      const emailBody = encodeURIComponent(rawBody);
+      window.location.href = `mailto:${destinationEmail}?subject=${subject}&body=${emailBody}`;
     });
   }
 
   // Submit WhatsApp
   const submitWA = document.getElementById('submit-wa');
   if (submitWA) {
-    submitWA.addEventListener('click', () => {
-      const name = document.getElementById('form-name').value;
-      const org = document.getElementById('form-org').value;
-      const service = document.getElementById('form-service').value;
-      const brief = document.getElementById('form-brief').value;
+    submitWA.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!validateIntakeForm()) {
+        return;
+      }
+      const nameValue = document.getElementById('form-name') ? document.getElementById('form-name').value.trim() : '';
+      const orgValue = document.getElementById('form-org') ? document.getElementById('form-org').value.trim() : '';
+      const emailValue = document.getElementById('form-email') ? document.getElementById('form-email').value.trim() : '';
+      const phoneValue = document.getElementById('form-phone') ? document.getElementById('form-phone').value.trim() : '';
+      const architectureValue = document.getElementById('form-service') ? document.getElementById('form-service').value : '';
+      const briefValue = document.getElementById('form-brief') ? document.getElementById('form-brief').value.trim() : '';
 
-      const message = encodeURIComponent(
-        `*Technical Intake — Flamingo Emerging Technologies*\n\nName: ${name}\nOrganization: ${org}\nService: ${service}\n\nBrief:\n${brief}`
-      );
-      window.open(`https://wa.me/971506802332?text=${message}`, '_blank');
+      const rawBody = `New Technical Intake Form Submission:\n\n` +
+                      `Full Name: ${nameValue}\n` +
+                      `Organization: ${orgValue}\n` +
+                      `Work Email: ${emailValue}\n` +
+                      `Phone Number: ${phoneValue}\n\n` +
+                      `Service of Interest: ${architectureValue}\n\n` +
+                      `Project Brief:\n${briefValue}`;
+
+      const encodedText = encodeURIComponent(rawBody);
+      window.open(`https://wa.me/971506802332?text=${encodedText}`, '_blank');
     });
   }
 
